@@ -30,7 +30,7 @@
   import direction01 from '../../../images/officialWebsite/home/direction01.jpg'
   import direction02 from '../../../images/officialWebsite/home/direction02.jpg'
   import direction03 from '../../../images/officialWebsite/home/direction03.jpg'
-  import direction04 from '../../../images/officialWebsite/home/direction04.jpg'
+  import direction04 from '../../../images/officialWebsite/home/direction04.png'
   export default {
     data(){
       return{
