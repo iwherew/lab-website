@@ -17,12 +17,49 @@ export default new Router({
           path: 'home',
           meta: {title: '首页'},
           component: resolve => require(['../pages/officialWebsite/Home/Home'], resolve),
-        }
-        ]
+        },
+        {
+          path: 'notice',
+          meta: {title: '通知公告'},
+          component: resolve => require(['../pages/officialWebsite/Notice/Notice'], resolve),
+        },
+        {
+          path: 'article',
+          component: resolve => require(['../pages/officialWebsite/article/article'], resolve),
+          children: [
+            {
+              path: 'articleDetail',
+              meta: {title: '文章详情'},
+              component: resolve => require(['../pages/officialWebsite/article/articleDetail'], resolve),
+            },
+            {
+              path: 'articleEdit',
+              meta: {title: '文章编辑'},
+              component: resolve => require(['../pages/officialWebsite/article/articleEdit'], resolve),
+            },
+          ]
+        },
+        {
+          path: 'department',
+          meta: {title: '部门介绍'},
+          component: resolve => require(['../pages/officialWebsite/Department/department'], resolve),
+        },
+        {
+          path: 'member',
+          meta: {title: '成员介绍'},
+          component: resolve => require(['../pages/officialWebsite/Member/member'], resolve),
+        },
+        {
+          path: 'recruitment',
+          meta: {title: '招生信息'},
+          component: resolve => require(['../pages/officialWebsite/Recruitment/recruitment'], resolve),
+        },
+      ]
     },
   ],
 })
 
+// 解决相同路径不能跳转的问题
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
