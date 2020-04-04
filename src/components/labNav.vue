@@ -22,7 +22,10 @@
           <el-menu-item index="/recruitment">招生信息</el-menu-item>
         </el-menu>
       </div>
-      <div class="avatar no-avatar bg"></div>
+      <el-tooltip class="item" effect="dark" content="用户未登录，请先登录" placement="bottom">
+        <div class="avatar no-avatar bg" @click="toLogin"></div>
+      </el-tooltip>
+
     </div>
   </div>
 
@@ -34,6 +37,11 @@
         return this.$route.path
       }
     },
+    methods:{
+      toLogin(){
+        this.$router.push('/login')
+      }
+    }
   }
 </script>
 <style scoped lang="less">

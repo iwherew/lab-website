@@ -7,6 +7,10 @@ import getters from './getters'
 Vue.use(Vuex)
 
 const state = {
+  user: {
+    sno: 16051430,
+    imageUrl: ''
+  }
 }
 
 export default new Vuex.Store({
