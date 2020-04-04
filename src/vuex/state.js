@@ -9,7 +9,10 @@ Vue.use(Vuex)
 const state = {
   user: {
     sno: 16051430,
-    imageUrl: ''
+    nickname: '不也挺好的嘛',
+    // 其他网站图片跨域403
+    imageUrl: '',
+    authorization: 'admin'
   }
 }
 
