@@ -55,7 +55,7 @@ export default new Router({
           component: resolve => require(['../pages/officialWebsite/Recruitment/recruitment'], resolve),
         },
         {
-          path: 'personalPage',
+          path: 'personalPage/:part',
           meta: {title: '个人主页'},
           component: resolve => require(['../pages/officialWebsite/PersonalPage/PersonalPage'], resolve),
         },

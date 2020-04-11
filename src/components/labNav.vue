@@ -1,6 +1,6 @@
 <template>
   <div class="header flex">
-    <div class="header-left flex">
+    <div class="header-left flex" @click="handleCommand('/')">
       <div class="logo bg"></div>
       <div class="school-name flex-c">
         <div class="school-name-cn">杭州电子科技大学</div>
@@ -32,17 +32,17 @@
           <div class="avatar user-avatar bg"></div>
           <div class="red-dot">7</div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="/personalPage">个人主页</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/0">个人主页</el-dropdown-item>
             <el-dropdown-item>内部论坛</el-dropdown-item>
-            <el-dropdown-item>资源查询</el-dropdown-item>
-            <el-dropdown-item>部门通知
+            <el-dropdown-item command="/personalPage/3">资源查询</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/0">部门通知
               <div class="red-dot">5</div>
             </el-dropdown-item>
-            <el-dropdown-item>我的消息
+            <el-dropdown-item command="/personalPage/2">我的消息
               <div class="red-dot">2</div>
             </el-dropdown-item>
-            <el-dropdown-item>我的收藏</el-dropdown-item>
-            <el-dropdown-item>注销账号</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/1">我的收藏</el-dropdown-item>
+            <el-dropdown-item>退出登陆</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

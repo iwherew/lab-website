@@ -1,21 +1,23 @@
 <template>
   <div class="right-content flex">
-    <div class="select-bar flex-c">
+    <div class="select-bar flex">
       <div class="select-bar-wrap">
         <div :class="{'select-bar-item':true,'active':activeIndex==index}"
              v-for="(item, index) in selectBarItems"
              @click="clickBar(index)"
         >{{item.title}}</div>
       </div>
-      <div class="right-part">
-      </div>
+
+    </div>
+    <div class="right-part flex-c">
+      <article-list-component :title="selectBarItems[activeIndex].title"/>
     </div>
   </div>
 </template>
 <script>
-  import articleLists from '../common/articleLists'
+  import articleListComponent from '../common/articleListsComponent'
   export default {
-    components:{articleLists},
+    components:{articleListComponent},
     data(){
       return{
         activeIndex: 0,
@@ -39,9 +41,22 @@
         ]
       }
     },
+    computed:{
+      part(){
+        return this.$route.params.part
+      }
+    },
     methods:{
       clickBar(index){
         this.activeIndex = index
+      }
+    },
+    mounted() {
+      this.activeIndex = this.$route.params.part
+    },
+    watch:{
+      part(val){
+        this.activeIndex = val
       }
     }
   }
@@ -73,6 +88,11 @@
           color: #FFF;
         }
       }
+    }
+    .right-part{
+      margin-top: 20px;
+      flex-grow: 1;
+      align-items: center;
     }
   }
 </style>
