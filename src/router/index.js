@@ -54,6 +54,11 @@ export default new Router({
           meta: {title: '招生信息'},
           component: resolve => require(['../pages/officialWebsite/Recruitment/recruitment'], resolve),
         },
+        {
+          path: 'personalPage',
+          meta: {title: '个人主页'},
+          component: resolve => require(['../pages/officialWebsite/PersonalPage/PersonalPage'], resolve),
+        },
       ],
     },
     {

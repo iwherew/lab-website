@@ -28,11 +28,11 @@
         </el-tooltip>
       </div>
       <div class="avatar-wrap" v-else>
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <div class="avatar user-avatar bg"></div>
           <div class="red-dot">7</div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人主页</el-dropdown-item>
+            <el-dropdown-item command="/personalPage">个人主页</el-dropdown-item>
             <el-dropdown-item>内部论坛</el-dropdown-item>
             <el-dropdown-item>资源查询</el-dropdown-item>
             <el-dropdown-item>部门通知
@@ -63,6 +63,9 @@
     methods: {
       toLogin() {
         this.$router.push('/login')
+      },
+      handleCommand(command) {
+        this.$router.push(command)
       }
     }
   }
@@ -115,9 +118,9 @@
       }
 
       &.user-avatar {
-        margin: 5px 20px;
-        height: 55px;
-        width: 55px;
+        margin: 5px 20px 0;
+        height: 60px;
+        width: 60px;
         background-image: url("../images/userImg/userImage.jpg");
       }
     }
@@ -157,6 +160,10 @@
     width: 150px;
     .el-dropdown-menu__item{
       position: relative;
+    }
+    .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+      background-color: #E2E2E2;
+      color: #606266;
     }
     .red-dot{
       position: absolute;

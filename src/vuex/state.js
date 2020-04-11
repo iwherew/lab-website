@@ -9,10 +9,14 @@ Vue.use(Vuex)
 const state = {
   user: {
     sno: 16051430,
-    nickname: '不也挺好的嘛',
+    id: 233,
+    nickname: 'amadeus',
     // 其他网站图片跨域403
     imageUrl: '',
-    authorization: 'admin'
+    authorization: 'admin',
+    email: 'iwhere_w@126.com',
+    phone: '18767177777',
+    selfIntroduction: '这个人很懒',
   }
 }
 
