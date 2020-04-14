@@ -2,7 +2,7 @@
   <div class="profile flex-c">
     <div class="avatar bg"></div>
     <div class="authorization">管理员</div>
-    <divf class="info">
+    <div class="info">
       <div class="title gray flex">
         <div>个人资料</div>
         <div class="id">id： {{user.id}}</div>
@@ -11,8 +11,8 @@
       <div class="phone">手机：{{user.phone}}</div>
       <div class="email">邮箱：{{user.email}}</div>
       <div class="self-introduction">个人介绍： {{user.selfIntroduction}}</div>
-    </divf>
-    <div class="forum-btn">进入内部论坛</div>
+    </div>
+    <div class="forum-btn" @click="$router.push('/forum')">进入内部论坛</div>
   </div>
 </template>
 <script>

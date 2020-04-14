@@ -63,7 +63,21 @@ export default new Router({
     },
     {
       path: '/login',
+      meta: {title: '登录'},
       component: resolve => require(['../pages/Login/Login'], resolve),
+    },
+    {
+      path: '/forum',
+      redirect: '/forum/home',
+      meta: {title: '内部论坛'},
+      component: resolve => require(['../pages/forum/Index'], resolve),
+      children:[
+        {
+          path: 'home',
+          meta: {title: '内部论坛'},
+          component: resolve => require(['../pages/forum/Home/Home'], resolve),
+        },
+      ]
     }
   ],
 })

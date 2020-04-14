@@ -1,19 +1,20 @@
 <template>
   <div class="header flex">
     <div class="header-left flex" @click="handleCommand('/')">
-      <div class="logo bg"></div>
       <div class="school-name flex-c">
         <div class="school-name-cn">杭州电子科技大学</div>
         <div class="school-name-en">Hangzhou Dianzi University</div>
       </div>
-      <div class="lab-name">计算机实验室</div>
+      <div class="lab-name">计算机实验室 内部论坛</div>
     </div>
     <div class="header-right flex">
       <div class="nav">
         <el-menu :default-active="activeIndex"
                  mode="horizontal"
-                 active-text-color="#F54785"
                  router
+                 background-color="#3B4348"
+                 text-color="#fff"
+                 active-text-color="#ffd04b"
         >
           <el-menu-item index="/home">首页</el-menu-item>
           <el-menu-item index="/notice">通知公告</el-menu-item>
@@ -73,8 +74,9 @@
 <style scoped lang="less">
   .header {
     justify-content: space-between;
-
+    background: #3B4348;
     .header-left {
+      cursor: pointer;
       .logo {
         margin: 5px 25px;
         width: 60px;
@@ -83,27 +85,28 @@
       }
 
       .school-name {
-        color: #003B90;
+        margin-left: 20px;
+        color: #FFF;
         font-weight: bold;
         padding: 10px 10px 0;
         align-items: center;
       }
 
       .school-name-cn {
-        font-size: 26px;
+        font-size: 24px;
       }
 
       .school-name-en {
-        margin-top: 5px;
-        font-size: 12px;
+        margin-top: 8px;
+        font-size: 11px;
         letter-spacing: 1px;
       }
 
       .lab-name {
         padding-left: 20px;
         line-height: 70px;
-        color: #F54785;
-        font-size: 18px;
+        color: #818A90;
+        font-size: 14px;
         font-weight: bold;
       }
     }
