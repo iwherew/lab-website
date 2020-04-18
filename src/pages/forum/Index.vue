@@ -15,4 +15,7 @@
   }
 </script>
 <style scoped lang="less">
+  .forum{
+    width: 100%;
+  }
 </style>

@@ -16,11 +16,11 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
         >
-          <el-menu-item index="/home">首页</el-menu-item>
-          <el-menu-item index="/notice">通知公告</el-menu-item>
-          <el-menu-item index="/department">部门介绍</el-menu-item>
-          <el-menu-item index="/member">成员介绍</el-menu-item>
-          <el-menu-item index="/recruitment">招生信息</el-menu-item>
+          <el-menu-item index="/forum/home">首页</el-menu-item>
+          <el-menu-item index="/notice">综合区</el-menu-item>
+          <el-menu-item index="/department">提问区</el-menu-item>
+          <el-menu-item index="/member">分享区</el-menu-item>
+          <el-menu-item index="/recruitment">闲聊区</el-menu-item>
         </el-menu>
       </div>
       <div class="avatar-wrap" v-if="!user.sno">
