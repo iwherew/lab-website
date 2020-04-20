@@ -5,7 +5,7 @@
          v-for="(item, index) in list"
          :key="index"
     >
-      <div :class="generateClassName(item)"></div>
+      <div :class="iconClass(item)"></div>
       <div class="brief flex-c">
         <div class="title one-line">{{item.title}}</div>
         <div class="subtitle flex">
@@ -24,7 +24,7 @@
   export default {
     props:['title','list'],
     methods:{
-      generateClassName(item){
+      iconClass(item){
         return `content-icon bg `+ item.subarea
       },
       subareaTransform(subarea){

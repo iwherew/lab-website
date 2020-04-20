@@ -77,6 +77,26 @@ export default new Router({
           meta: {title: '内部论坛'},
           component: resolve => require(['../pages/forum/Home/Home'], resolve),
         },
+        {
+          path: 'mixed',
+          meta: {title: '综合区'},
+          component: resolve => require(['../pages/forum/area/mixedArea'], resolve),
+        },
+        {
+          path: 'askArea',
+          meta: {title: '提问区'},
+          component: resolve => require(['../pages/forum/area/askArea'], resolve),
+        },
+        {
+          path: 'shareArea',
+          meta: {title: '分享区'},
+          component: resolve => require(['../pages/forum/area/shareArea'], resolve),
+        },
+        {
+          path: 'chatArea',
+          meta: {title: '闲聊区'},
+          component: resolve => require(['../pages/forum/area/chatArea'], resolve),
+        },
       ]
     }
   ],

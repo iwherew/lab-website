@@ -60,7 +60,6 @@
       height: 200px;
       background: #414A52;
       padding-top: 20px;
-      padding-left: 100px;
       .title{
         font-size: 20px;
         color: #FFF;
@@ -68,6 +67,7 @@
         margin-bottom: 12px;
       }
       .address{
+        margin-left: 110px;
         .text{
           width: 200px;
           font-size: 14px;

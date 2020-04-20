@@ -17,10 +17,10 @@
                  active-text-color="#ffd04b"
         >
           <el-menu-item index="/forum/home">首页</el-menu-item>
-          <el-menu-item index="/notice">综合区</el-menu-item>
-          <el-menu-item index="/department">提问区</el-menu-item>
-          <el-menu-item index="/member">分享区</el-menu-item>
-          <el-menu-item index="/recruitment">闲聊区</el-menu-item>
+          <el-menu-item index="/forum/mixed">综合区</el-menu-item>
+          <el-menu-item index="/forum/askArea">提问区</el-menu-item>
+          <el-menu-item index="/forum/shareArea">分享区</el-menu-item>
+          <el-menu-item index="/forum/chatArea">闲聊区</el-menu-item>
         </el-menu>
       </div>
       <div class="avatar-wrap" v-if="!user.sno">

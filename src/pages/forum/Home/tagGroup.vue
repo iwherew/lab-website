@@ -23,6 +23,7 @@
 <style scoped lang="less">
   .tag-group{
     margin-top: 30px;
+    margin-bottom: 30px;
   }
   .title{
     color: #3B4348;

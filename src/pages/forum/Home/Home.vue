@@ -140,13 +140,30 @@
     },
     methods:{
       changePraise(id){
+        let hasChanged = false
         this.popularList.forEach((item,index) => {
           if(item.id == id){
+            if(!hasChanged){
+              hasChanged = true
+              if(item.isPraised){
+                this.popularList[index].praisePoints--
+              }else{
+                this.popularList[index].praisePoints++
+              }
+            }
             this.popularList[index].isPraised = !item.isPraised
           }
         })
         this.newestList.forEach((item,index) => {
           if(item.id == id){
+            if(!hasChanged){
+              hasChanged = true
+              if(item.isPraised){
+                this.newestList[index].praisePoints--
+              }else{
+                this.newestList[index].praisePoints++
+              }
+            }
             this.newestList[index].isPraised = !item.isPraised
           }
         })
