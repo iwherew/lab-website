@@ -97,6 +97,16 @@ export default new Router({
           meta: {title: '闲聊区'},
           component: resolve => require(['../pages/forum/area/chatArea'], resolve),
         },
+        {
+          path: 'articleEdit',
+          meta: {title: '文章编辑'},
+          component: resolve => require(['../pages/forum/article/articleEdit'], resolve),
+        },
+        {
+          path: 'articleDetail',
+          meta: {title: '文章详情'},
+          component: resolve => require(['../pages/forum/article/articleDetail'], resolve),
+        },
       ]
     }
   ],

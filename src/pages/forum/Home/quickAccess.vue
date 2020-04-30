@@ -5,6 +5,7 @@
       <div class="item flex"
            v-for="(item, index) in quickAccessList"
            :key="index"
+           @click="routerPush(item.url)"
       >
         <div class="icon bg" :style="{'backgroundImage':'url('+item.iconUrl+')'}"></div>
         <div class="text">{{item.name}}</div>
@@ -28,24 +29,30 @@
           {
             name: '发帖',
             iconUrl: icon01,
-            iconactiveUrl: icon01active,
+            iconActiveUrl: icon01active,
+            url: '/forum/articleEdit'
           },
           {
             name: '团队',
             iconUrl: icon02,
-            iconactiveUrl: icon02active,
+            iconActiveUrl: icon02active,
           },
           {
             name: '收藏',
             iconUrl: icon03,
-            iconactiveUrl: icon03active,
+            iconActiveUrl: icon03active,
           },
           {
             name: '退出论坛',
             iconUrl: icon04,
-            iconactiveUrl: icon04active,
+            iconActiveUrl: icon04active,
           },
         ]
+      }
+    },
+    methods:{
+      routerPush(url){
+        this.$router.push(url)
       }
     }
   }

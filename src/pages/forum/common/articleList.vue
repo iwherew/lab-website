@@ -1,5 +1,5 @@
 <template>
-  <div class="popular">
+  <div class="article-list">
     <div class="column-title">{{title}}</div>
     <div class="content-item flex"
          v-for="(item, index) in list"
@@ -7,7 +7,8 @@
     >
       <div :class="iconClass(item)"></div>
       <div class="brief flex-c">
-        <div class="title one-line">{{item.title}}</div>
+        <div class="title one-line cp"
+             @click="goToDetail(item.id)">{{item.title}}</div>
         <div class="subtitle flex">
           <div class="time">{{item.time}}</div>
           <div class="subarea" v-text="subareaTransform(item.subarea)"></div>
@@ -40,6 +41,10 @@
       changePraise(id){
         this.$emit('changePraise',id)
       },
+      goToDetail(id){
+        let routeData = this.$router.resolve({ path: '/forum/articleDetail' ,query:{id:id}});
+        window.open(routeData.href, '_blank');
+      },
     }
   }
 </script>
@@ -56,6 +61,9 @@
     padding: 15px 0;
     letter-spacing: 0;
     position: relative;
+    &:hover{
+      background: #fdfdfd;
+    }
     .brief{
       .title{
         color: #3B4348;
@@ -85,6 +93,7 @@
       align-items: center;
       border: 1px solid #F2F2F2;
       border-bottom: none;
+      background: #FFFFFF;
       .praise-icon{
         margin-right: 8px;
         width: 15px;

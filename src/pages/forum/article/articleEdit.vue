@@ -4,12 +4,7 @@
       <div class="content">
         <el-form ref="form" label-width="100px">
           <el-form-item label="分区：">
-            <el-checkbox :indeterminate="isIndeterminate" border v-model="checkedAll" @change="handleCheckAllChange">
-              全选
-            </el-checkbox>
-            <el-checkbox-group v-model="context.checkedDepartment" size="medium" @change="handleCheckedCitiesChange">
-              <el-checkbox v-for="(item,index) in allDepartment" border :label="item" :key="index"></el-checkbox>
-            </el-checkbox-group>
+            <el-radio v-for="(item,index) in allDepartment" v-model="context.checkedDepartment" :label="item" :key="index">{{item}}</el-radio>
           </el-form-item>
           <el-form-item label="标题：">
             <el-input v-model="context.title" placeholder="请输入文章标题"></el-input>
@@ -33,7 +28,7 @@
               @blur="handleInputConfirm"
             >
             </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
           </el-form-item>
           <el-form-item label="内容：">
             <div class="white">
@@ -70,13 +65,10 @@
         inputValue: '',
         isClear: false,
         allDepartment: [
-          '语音识别部',
-          '图像处理部',
-          '统计分析部',
-          '算法部'
+          '提问区',
+          '分享区',
+          '闲聊区',
         ],
-        checkedAll: false,
-        isIndeterminate: false, //全选框不确定状态
         context: {
           id: null,
           title: null,
@@ -92,8 +84,7 @@
             name: `网络开学工作.pdf`,
             url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
           }],
-          checkedDepartment: [
-          ],
+          checkedDepartment: '提问区',
         },
       }
     },
@@ -119,15 +110,6 @@
       },
       change(val){
         console.log(val)
-      },
-      handleCheckAllChange(val) {
-        this.context.checkedDepartment = val ? this.allDepartment : [];
-        this.isIndeterminate = false;
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkedAll = checkedCount === this.allDepartment.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.allDepartment.length;
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);

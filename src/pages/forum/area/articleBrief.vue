@@ -2,7 +2,7 @@
   <div class="article-brief">
     <div class="header flex cp">
       <div :class="iconClass(articleItem.subarea)"></div>
-      <div class="title one-line">{{articleItem.title}}</div>
+      <div class="title one-line" @click="goToDetail(articleItem.id)">{{articleItem.title}}</div>
     </div>
     <div class="info flex">
       <div class="info-left flex">
@@ -18,7 +18,7 @@
         <div class="praise-num">{{articleItem.praisePoints}}</div>
       </div>
     </div>
-    <div class="brief cp three-lines">
+    <div class="brief cp three-lines" @click="goToDetail(articleItem.id)">
       {{articleItem.brief}}
     </div>
   </div>
@@ -32,6 +32,10 @@
       },
       changePraise(id){
         this.$emit('changePraise',id)
+      },
+      goToDetail(id){
+        let routeData = this.$router.resolve({ path: '/forum/articleDetail' ,query:{id:id}});
+        window.open(routeData.href, '_blank');
       },
     }
   }
