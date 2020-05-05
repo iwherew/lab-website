@@ -107,6 +107,21 @@ export default new Router({
           meta: {title: '文章详情'},
           component: resolve => require(['../pages/forum/article/articleDetail'], resolve),
         },
+        {
+          path: 'createTeam',
+          meta: {title: '创建团队'},
+          component: resolve => require(['../pages/forum/team/CreateTeam'], resolve),
+        },
+        {
+          path: 'myTeam',
+          meta: {title: '我的团队'},
+          component: resolve => require(['../pages/forum/team/myTeam'], resolve),
+        },
+        {
+          path: 'project',
+          meta: {title: '项目详情'},
+          component: resolve => require(['../pages/forum/team/project'], resolve),
+        },
       ]
     }
   ],

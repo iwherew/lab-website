@@ -1,5 +1,5 @@
 <template>
-  <div class="create-team flex">
+  <div class="create-team flex cp" @click="goTo('/forum/createTeam')">
     <div class="left">
       <div class="title">创建团队</div>
       <div class="subtitle">需要不对外公开的团队讨论？在这里创建一个新的团队并邀请你的成员加入</div>
@@ -9,6 +9,11 @@
 </template>
 <script>
   export default {
+    methods:{
+      goTo(url){
+        this.$router.push(url)
+      }
+    }
   }
 </script>
 <style scoped lang="less">

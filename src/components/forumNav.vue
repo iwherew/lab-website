@@ -1,6 +1,6 @@
 <template>
   <div class="header flex">
-    <div class="header-left flex" @click="handleCommand('/')">
+    <div class="header-left flex" @click="handleCommand('/forum/home')">
       <div class="school-name flex-c">
         <div class="school-name-cn">杭州电子科技大学</div>
         <div class="school-name-en">Hangzhou Dianzi University</div>
