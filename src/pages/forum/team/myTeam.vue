@@ -5,7 +5,7 @@
       <div class="title">我的团队</div>
       <div class="subtitle">在这里查看你参与的团队</div>
       <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item :name="item.teamID" v-for="(item, index) in teamList" :key="index" name="1">
+        <el-collapse-item v-for="(item, index) in teamList" :key="index" name="1">
           <template slot="title">
             <div class="collapse-title">{{item.teamName}}</div>
           </template>
