@@ -85,7 +85,7 @@
       transform: translate(-50%,-50%);
       width:100%;
       height:100%;
-      z-index:11;
+      z-index:3;
       justify-content: center;
       align-items: center;
       background: rgba(0,0,0,0.5);

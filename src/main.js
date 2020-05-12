@@ -5,7 +5,8 @@ import store from './vuex/state'
 Vue.config.productionTip = false
 import ElementUI from 'element-ui';
 Vue.use(ElementUI);
-
+import Api from './axios/index.js';
+Vue.prototype.$api = Api;
 /* eslint-disable no-new */
 
 new Vue({
