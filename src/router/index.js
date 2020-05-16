@@ -123,6 +123,29 @@ export default new Router({
           component: resolve => require(['../pages/forum/team/project'], resolve),
         },
       ]
+    },
+    {
+      path: '/management',
+      redirect: '/management/user',
+      meta: {title: '管理系统'},
+      component: resolve => require(['../pages/management/index'], resolve),
+      children: [
+        {
+          path: 'user',
+          meta: {title: '用户管理'},
+          component: resolve => require(['../pages/management/user'], resolve),
+        },
+        {
+          path: 'job',
+          meta: {title: '招聘信息'},
+          component: resolve => require(['../pages/management/job'], resolve),
+        },
+        {
+          path: 'department',
+          meta: {title: '部门管理'},
+          component: resolve => require(['../pages/management/department'], resolve),
+        },
+      ]
     }
   ],
 })
