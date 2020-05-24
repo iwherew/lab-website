@@ -29,22 +29,22 @@
         <el-button type="primary" plain size="small">提交更新</el-button>
       </div>
       <el-timeline>
-        <el-timeline-item timestamp="2018/4/12" placement="top">
+        <el-timeline-item timestamp="2020/4/16" placement="top">
           <el-card>
-            <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/12 20:46</p>
+            <h4>接口联调完成</h4>
+            <p>王立龙 提交于 2020/4/16 20:46</p>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/3" placement="top">
+        <el-timeline-item timestamp="2020/4/15" placement="top">
           <el-card>
-            <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/3 20:46</p>
+            <h4>文章详情页面开发完成</h4>
+            <p>王立龙 提交于 2020/4/15 20:46</p>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/2" placement="top">
+        <el-timeline-item timestamp="2020/4/13" placement="top">
           <el-card>
             <h4>更新 Github 模板</h4>
-            <p>王小虎 提交于 2018/4/2 20:46</p>
+            <p>王立龙 提交于 2020/4/13 20:46</p>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -67,13 +67,13 @@
       return {
         reverse: true,
         activities: [{
-          content: '活动按期开始',
-          timestamp: '2020-04-15'
+          content: '通过验收',
+          timestamp: '2020-04-29'
         }, {
           content: '通过审核',
           timestamp: '2020-04-13'
         }, {
-          content: '创建成功',
+          content: '提交审核',
           timestamp: '2020-04-11'
         }],
         newestList:[

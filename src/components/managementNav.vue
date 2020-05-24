@@ -20,7 +20,7 @@
           <el-menu-item index="/forum/home">内部论坛</el-menu-item>
         </el-menu>
       </div>
-      <div class="avatar-wrap" v-if="!user.sno">
+      <div class="avatar-wrap" v-if="!user.userId">
         <el-tooltip class="item" effect="dark" content="用户未登录，请先登录" placement="bottom">
           <div class="avatar no-avatar bg" @click="toLogin"></div>
         </el-tooltip>

@@ -145,6 +145,16 @@ export default new Router({
           meta: {title: '部门管理'},
           component: resolve => require(['../pages/management/department'], resolve),
         },
+        {
+          path: 'apply',
+          meta: {title: '入部申请'},
+          component: resolve => require(['../pages/management/apply'], resolve),
+        },
+        {
+          path: 'member',
+          meta: {title: '成员管理'},
+          component: resolve => require(['../pages/management/member'], resolve),
+        },
       ]
     }
   ],

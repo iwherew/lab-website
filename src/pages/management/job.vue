@@ -1,27 +1,11 @@
 <template>
   <div class="container">
     <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="startTime">
-        <el-date-picker
-          style="width:100%"
-          v-model="searchForm.startTime"
-          type="datetime"
-          placeholder="选择开始时间"
-          value-format="timestamp"
-          @change="getData"
-        >
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item prop="endTime">
-        <el-date-picker
-          style="width:100%"
-          v-model="searchForm.endTime"
-          type="datetime"
-          placeholder="选择结束时间"
-          value-format="timestamp"
-          @change="getData"
-        >
-        </el-date-picker>
+      <el-form-item prop="search">
+        <el-input
+          v-model="searchForm.name"
+          placeholder="请输入信息标题"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -37,7 +21,7 @@
     <el-table
       :data="list"
       style="width: 100%"
-      :row-style="{ height: '60px', color: '#666' }"
+      :row-style="{ height: '30px', color: '#666' }"
       :header-row-style="{
           height: '60px',
           fontSize: '14px',
@@ -45,17 +29,35 @@
         }"
     >
       <el-table-column
-        prop="estate.companyName"
-        label="招聘"
+        prop="id"
+        label="id"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="estate.estateName"
-        label="园区"
+        prop="title"
+        label="标题"
         min-width="100"
         align="center"
       ></el-table-column>
+      <el-table-column
+        prop="upNickname"
+        label="上传者"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="visitCount"
+        label="阅读人数"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column label="操作" width="180" align="center">
+        <template slot-scope="scope">
+          <el-button type="warning" @click="showDialog(false, scope.row)">修改</el-button>
+          <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="pagination">
       <el-pagination
@@ -63,48 +65,194 @@
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
         layout="prev, pager, next, total, jumper"
-        :total="totalCount"
-        :current-page="curPage"
+        :total="totalNum"
+        :current-page="pageNum"
         :page-size="pageSize"
         :page-sizes="[10, 20, 30, 100]"
       >
       </el-pagination>
     </div>
+    <el-dialog
+      :title=this.dialogTitle
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <el-form ref="form" :model="departmentDetail" label-width="80px">
+        <el-form-item label="部门名称">
+          <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
+        </el-form-item>
+        <el-form-item label="部门描述">
+          <el-input
+            type="textarea"
+            :rows="3"
+            placeholder="请输入部门描述"
+            v-model="departmentDetail.description">
+          </el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm()">确 认</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="删除操作"
+      :visible.sync="deleteDialogVisible"
+      width="30%"
+    >
+      <span>确认删除吗？删除后无法恢复</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button type="danger" @click="confirm()">删 除</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
   export default {
     data(){
       return{
-        totalCount: 0,
-        curPage: 1,
+        totalNum: 0,
+        pageNum: 1,
         pageSize: 10,
         searchForm:{},
         list:[],
+        dialogVisible: false,
+        deleteDialogVisible: false,
+        deleteRow: null,
+        departmentDetail:{
+          id: null,
+          name: null,
+          description: null,
+        },
+        dialogTitle: null,
       }
     },
     mounted() {
       this.getData()
     },
     methods:{
-      getData(){
-        this.$api.get('/api/jobPage',
-          { 'page': 1}
-        ).then(
-          res => {
-            console.log(res)
-          }
-        ).catch(err => {console.log(err)})
+      getData(refresh){
+        if(refresh){
+          this.pageNum = 1
+        }
+        if(this.searchForm.name){
+          this.$api.get('/api/searchJob',
+            {
+              'page': this.pageNum,
+              'search': this.searchForm.name,
+            },
+            res => {
+              if (res.status >= 200) {
+                this.list = res.data.data
+                this.pageNum = res.data.pageNum,
+                  this.pageSize = res.data.pageSize,
+                  this.totalNum = res.data.totalNum
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }else{
+          this.$api.get('/api/jobPage',
+            { 'page': this.pageNum},
+            res => {
+              if (res.status >= 200) {
+                this.list = res.data.data
+                this.pageNum = res.data.pageNum,
+                  this.pageSize = res.data.pageSize,
+                  this.totalNum = res.data.totalNum
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }
+
       },
       // 分页导航
       handleCurrentChange(val) {
-        this.curPage = val;
+        this.pageNum = val;
         this.getData();
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
         this.pageSize = val;
         this.getData();
+      },
+      handleDelete(row) {
+        this.deleteRow = row
+        this.deleteDialogVisible = true
+      },
+      confirmDelete(){
+        this.$api.delete('/api/deleteJob',
+          {
+            "jobId": this.deleteRow.id,
+            "upUserId": this.deleteRow.upUserId
+          },
+          res => {
+            if (res.status >= 200) {
+              this.getData(true)
+              this.deleteDialogVisible = false
+              this.$message.success('删除成功');
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      showDialog(isAdd,row){
+        if(isAdd){
+          this.dialogTitle = '添加部门'
+          this.departmentDetail = {
+            id: null,
+            name: null,
+            description: null,
+          }
+        }else{
+          this.dialogTitle = '修改部门'
+          this.departmentDetail = {
+            id: row.id,
+            name: row.name,
+            description: row.description,
+          }
+        }
+        this.dialogVisible = true
+      },
+      confirm(){
+        if(this.dialogTitle == '添加部门'){
+          this.$api.post('/api/insertDepartment',
+            { "description": this.departmentDetail.description,
+              "name": this.departmentDetail.name},
+            res => {
+              if (res.status >= 200) {
+                this.getData(true)
+                this.dialogVisible = false
+                this.$message.success('创建新部门成功');
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }else{
+          this.$api.put('/api/updateDepartment',
+            {
+              "id" : this.departmentDetail.id,
+              "description": this.departmentDetail.description,
+              "name": this.departmentDetail.name
+            },
+            res => {
+              if (res.status >= 200) {
+                this.getData(true)
+                this.dialogVisible = false
+                this.$message.success('修改部门信息成功');
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }
+
       },
     }
   }

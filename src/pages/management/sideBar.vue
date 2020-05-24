@@ -13,6 +13,10 @@
             <i class="el-icon-user-solid"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
+          <el-menu-item index="/management/apply">
+            <i class="el-icon-s-order"></i>
+            <span slot="title">入部申请</span>
+          </el-menu-item>
           <el-menu-item index="/management/job">
             <i class="el-icon-reading"></i>
             <span slot="title">招聘信息</span>
@@ -20,6 +24,14 @@
           <el-menu-item index="/management/department">
             <i class="el-icon-s-home"></i>
             <span slot="title">部门管理</span>
+          </el-menu-item>
+          <el-menu-item index="/management/member">
+            <i class="el-icon-s-custom"></i>
+            <span slot="title">成员管理</span>
+          </el-menu-item>
+          <el-menu-item index="/management/job">
+            <i class="el-icon-s-cooperation"></i>
+            <span slot="title">项目管理</span>
           </el-menu-item>
         </el-menu>
       </el-col>

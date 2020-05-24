@@ -44,20 +44,31 @@
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="name"
-        label="部门名称"
+        prop="memberId"
+        label="成员id"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="description"
-        label="部门描述"
+        prop="memberId"
+        label="成员名称"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="memberType"
+        label="成员权限"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="departmentId"
+        label="部门"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column label="操作" width="180" align="center">
         <template slot-scope="scope">
-          <el-button type="warning" @click="showDialog(false, scope.row)">修改</el-button>
           <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -79,7 +90,7 @@
       :title=this.dialogTitle
       :visible.sync="dialogVisible"
       width="30%"
-      >
+    >
       <el-form ref="form" :model="departmentDetail" label-width="80px">
         <el-form-item label="部门名称">
           <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
@@ -138,10 +149,10 @@
     methods:{
       getData(refresh){
         if(refresh){
-            this.pageNum = 1
+          this.pageNum = 1
         }
         if(this.searchForm.name){
-          this.$api.get('/api/searchDepartment',
+          this.$api.get('/api/searchMember',
             {
               'page': this.pageNum,
               'search': this.searchForm.name,
@@ -158,7 +169,7 @@
             }
           )
         }else{
-          this.$api.get('/api/departmentPage',
+          this.$api.get('/api/memberPage',
             { 'page': this.pageNum},
             res => {
               if (res.status >= 200) {
@@ -188,14 +199,14 @@
         this.deleteDialogVisible = true
       },
       confirmDelete(){
-        this.$api.delete('/api/deleteDepartment',
+        this.$api.delete('/api/deleteMember',
           {
-            "id" : this.deleteRow.id,
+            "memberId" : this.deleteRow.memberId,
           },
           res => {
             if (res.status >= 200) {
               this.getData(true)
-              this.dialogVisible = false
+              this.deleteDialogVisible = false
               this.$message.success('删除成功');
             } else {
               console.log(res.message);
@@ -229,7 +240,7 @@
             res => {
               if (res.status >= 200) {
                 this.getData(true)
-                this.deleteDialogVisible = false
+                this.dialogVisible = false
                 this.$message.success('创建新部门成功');
               } else {
                 console.log(res.message);

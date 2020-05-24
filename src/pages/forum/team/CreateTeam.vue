@@ -32,7 +32,7 @@
         <el-form-item label="项目名称：">
           <el-input v-model="form.projectName"></el-input>
         </el-form-item>
-        <el-form-item label="项目名称：">
+        <el-form-item label="项目描述：">
           <el-input v-model="form.projectDesc"></el-input>
         </el-form-item>
         <el-form-item label="">

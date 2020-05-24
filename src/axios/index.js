@@ -1,21 +1,26 @@
 // 引入axios
 import axios from 'axios'
+import store from "../vuex/state";
 
 let http = axios.create({
   baseURL: '/api',
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    'Content-Type': 'application/json;charset=utf-8'
   },
-  transformRequest: [function (data) {
-    let newData = '';
-    for (let k in data) {
-      if (data.hasOwnProperty(k) === true) {
-        newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-      }
-    }
-    return newData;
-  }]
+  // transformRequest: [function (data) {
+  //   let newData = '';
+  //   for (let k in data) {
+  //     if (data.hasOwnProperty(k) === true) {
+  //       newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+  //     }
+  //   }
+  //   return newData;
+  // }]
+  transformRequest: function (data) {
+    // 对 data 进行任意转换处理
+    return JSON.stringify(data);;
+  }
 });
 
 function apiAxios(method, url, params, response) {
@@ -30,6 +35,16 @@ function apiAxios(method, url, params, response) {
     response(err);
   })
 }
+
+http.interceptors.request.use(config => {
+  console.log("token ",store.state.user.token)
+  if (store.state.user.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+    config.headers.common['Token']=store.state.user.token
+  }
+  return config;
+}, err => {
+  return Promise.reject(err);
+});
 
 export default {
   get: function (url, params, response) {

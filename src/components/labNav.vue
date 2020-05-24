@@ -22,7 +22,7 @@
           <el-menu-item index="/recruitment">招生信息</el-menu-item>
         </el-menu>
       </div>
-      <div class="avatar-wrap" v-if="!user.sno">
+      <div class="avatar-wrap" v-if="!user.userId">
         <el-tooltip class="item" effect="dark" content="用户未登录，请先登录" placement="bottom">
           <div class="avatar no-avatar bg" @click="toLogin"></div>
         </el-tooltip>
@@ -41,8 +41,8 @@
             <el-dropdown-item command="/personalPage/2">我的消息
               <div class="red-dot">2</div>
             </el-dropdown-item>
-            <el-dropdown-item command="/personalPage/1">我的收藏</el-dropdown-item>
-            <el-dropdown-item>退出登陆</el-dropdown-item>
+            <el-dropdown-item command="/management">后台管理</el-dropdown-item>
+            <el-dropdown-item command="logout">退出登陆</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -61,11 +61,19 @@
       }
     },
     methods: {
+      logout(){
+        this.$store.dispatch('setAccount',{})
+        this.$router.push('/')
+      },
       toLogin() {
         this.$router.push('/login')
       },
       handleCommand(command) {
-        this.$router.push(command)
+        if(command == 'logout'){
+          this.logout()
+        }else{
+          this.$router.push(command)
+        }
       }
     }
   }

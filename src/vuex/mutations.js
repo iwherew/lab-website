@@ -1,5 +1,5 @@
 export default{
-  updatePage(state, page){
-    state.page = page
-  }
+  SET_ACCOUNT (state, platform) {
+    state.user = platform;
+  },
 }
