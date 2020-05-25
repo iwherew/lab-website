@@ -4,7 +4,7 @@
       <el-form-item prop="search">
         <el-input
           v-model="searchForm.name"
-          placeholder="请输入部门名称"
+          placeholder="请输入成员名称"
         ></el-input>
       </el-form-item>
       <el-form-item>
@@ -50,7 +50,7 @@
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="memberId"
+        prop="memberName"
         label="成员名称"
         min-width="100"
         align="center"
@@ -58,12 +58,6 @@
       <el-table-column
         prop="memberType"
         label="成员权限"
-        min-width="100"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="departmentId"
-        label="部门"
         min-width="100"
         align="center"
       ></el-table-column>
@@ -266,6 +260,23 @@
           )
         }
 
+      },
+      formatter(row) {
+        this.$api.get('/api/departmentId',
+          {
+            "id" : row.departmentId,
+          },
+          res => {
+            if (res.status >= 200) {
+              console.log(res.data.name)
+              return res.data.name;
+            } else {
+              console.log(res.message);
+              return "无"
+            }
+          }
+        )
+        return "无"
       },
     }
   }

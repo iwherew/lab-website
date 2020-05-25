@@ -1,4 +1,5 @@
 <template>
+  <!-- 个人主页文章列表 -->
   <div class="article-list-component flex-c">
     <div class="component-title">{{title}}</div>
     <div class="btn-group flex">

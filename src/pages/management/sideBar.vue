@@ -11,7 +11,7 @@
           active-text-color="#ffd04b">
           <el-menu-item index="/management/user">
             <i class="el-icon-user-solid"></i>
-            <span slot="title">用户管理</span>
+            <span slot="title">原始帐号</span>
           </el-menu-item>
           <el-menu-item index="/management/apply">
             <i class="el-icon-s-order"></i>
@@ -21,6 +21,14 @@
             <i class="el-icon-reading"></i>
             <span slot="title">招聘信息</span>
           </el-menu-item>
+          <el-menu-item index="/management/achievement">
+            <i class="el-icon-s-opportunity"></i>
+            <span slot="title">研究成果</span>
+          </el-menu-item>
+          <el-menu-item index="/management/announce">
+            <i class="el-icon-s-check"></i>
+            <span slot="title">通知公告</span>
+          </el-menu-item>
           <el-menu-item index="/management/department">
             <i class="el-icon-s-home"></i>
             <span slot="title">部门管理</span>
@@ -29,7 +37,7 @@
             <i class="el-icon-s-custom"></i>
             <span slot="title">成员管理</span>
           </el-menu-item>
-          <el-menu-item index="/management/job">
+          <el-menu-item index="/management/project">
             <i class="el-icon-s-cooperation"></i>
             <span slot="title">项目管理</span>
           </el-menu-item>

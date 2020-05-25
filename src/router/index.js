@@ -29,11 +29,13 @@ export default new Router({
           children: [
             {
               path: 'articleDetail',
+              name: 'articleDetail',
               meta: {title: '文章详情'},
               component: resolve => require(['../pages/officialWebsite/article/articleDetail'], resolve),
             },
             {
               path: 'articleEdit',
+              name: 'articleEdit',
               meta: {title: '文章编辑'},
               component: resolve => require(['../pages/officialWebsite/article/articleEdit'], resolve),
             },
@@ -132,7 +134,7 @@ export default new Router({
       children: [
         {
           path: 'user',
-          meta: {title: '用户管理'},
+          meta: {title: '原始帐号'},
           component: resolve => require(['../pages/management/user'], resolve),
         },
         {
@@ -154,6 +156,21 @@ export default new Router({
           path: 'member',
           meta: {title: '成员管理'},
           component: resolve => require(['../pages/management/member'], resolve),
+        },
+        {
+          path: 'achievement',
+          meta: {title: '研究成果'},
+          component: resolve => require(['../pages/management/achievement'], resolve),
+        },
+        {
+          path: 'announce',
+          meta: {title: '通知公告'},
+          component: resolve => require(['../pages/management/announce'], resolve),
+        },
+        {
+          path: 'project',
+          meta: {title: '项目管理'},
+          component: resolve => require(['../pages/management/project'], resolve),
         },
       ]
     }

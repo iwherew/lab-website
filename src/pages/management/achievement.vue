@@ -3,8 +3,8 @@
     <el-form :inline="true" :model="searchForm" style="text-align:right">
       <el-form-item prop="search">
         <el-input
-          v-model="searchForm.userId"
-          placeholder="请输入用户ID"
+          v-model="searchForm.name"
+          placeholder="请输入信息标题"
         ></el-input>
       </el-form-item>
       <el-form-item>
@@ -19,6 +19,7 @@
       </el-form-item>
       <el-form-item>
         <el-button
+          type="success"
           icon="search"
           @click="showDialog(true)"
         >
@@ -43,33 +44,33 @@
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="userId"
-        label="用户id"
+        prop="title"
+        label="标题"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="username"
-        label="用户名"
+        prop="upNickname"
+        label="上传者"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="applyType"
-        label="角色类型"
+        prop="upDate"
+        label="时间"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="applyStatus"
-        label="申请状态"
+        prop="visitCount"
+        label="阅读人数"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column label="操作" width="180" align="center">
-        <template slot-scope="scope" v-if="scope.row.applyStatus == '待审核'">
-          <el-button type="success" @click="handlePass(scope.row)">通过</el-button>
-          <el-button type="danger" @click="handleReject(scope.row)">拒绝</el-button>
+        <template slot-scope="scope">
+          <el-button type="warning" @click="showDialog(false, scope.row)">修改</el-button>
+          <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,16 +92,16 @@
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <el-form ref="form" :model="departmentDetail" label-width="80px">
-        <el-form-item label="部门名称">
-          <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
+      <el-form ref="form" :model="dialogDetail" label-width="80px">
+        <el-form-item label="文章标题">
+          <el-input v-model="dialogDetail.title" placeholder="请输入部门名称"></el-input>
         </el-form-item>
-        <el-form-item label="部门描述">
+        <el-form-item label="文章内容">
           <el-input
             type="textarea"
-            :rows="3"
-            placeholder="请输入部门描述"
-            v-model="departmentDetail.description">
+            :rows="6"
+            placeholder="请输入文章内容"
+            v-model="dialogDetail.content">
           </el-input>
         </el-form-item>
       </el-form>
@@ -108,6 +109,17 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirm()">确 认</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="删除操作"
+      :visible.sync="deleteDialogVisible"
+      width="30%"
+    >
+      <span>确认删除吗？删除后无法恢复</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button type="danger" @click="confirmDelete()">删 除</el-button>
       </span>
     </el-dialog>
   </div>
@@ -122,10 +134,11 @@
         searchForm:{},
         list:[],
         dialogVisible: false,
-        departmentDetail:{
-          id: null,
-          name: null,
-          description: null,
+        deleteDialogVisible: false,
+        deleteRow: null,
+        dialogDetail:{
+          title: null,
+          content: null,
         },
         dialogTitle: null,
       }
@@ -139,7 +152,7 @@
           this.pageNum = 1
         }
         if(this.searchForm.name){
-          this.$api.get('/api/searchDepartment',
+          this.$api.get('/api/searchAchievement',
             {
               'page': this.pageNum,
               'search': this.searchForm.name,
@@ -156,8 +169,8 @@
             }
           )
         }else{
-          this.$api.get('/api/apply/pending',
-            { 'teacherId': 1},
+          this.$api.get('/api/achievementPage',
+            { 'page': this.pageNum},
             res => {
               if (res.status >= 200) {
                 this.list = res.data.data
@@ -181,26 +194,21 @@
         this.pageSize = val;
         this.getData();
       },
-      handlePass(row){
-        this.$api.post('/api/apply/accept',
-          { "applyId": row.id},
-          res => {
-            if (res.status >= 200) {
-              this.getData(true)
-              this.$message.success('已通过');
-            } else {
-              console.log(res.message);
-            }
-          }
-        )
+      handleDelete(row) {
+        this.deleteRow = row
+        this.deleteDialogVisible = true
       },
-      handleReject(row) {
-        this.$api.post('/api/apply/reject',
-          { "applyId": row.id},
+      confirmDelete(){
+        this.$api.delete( '/api/deleteAchievement',
+          {
+            "achievementId": this.deleteRow.id,
+            "upUserId": this.$store.state.user.userId
+          },
           res => {
             if (res.status >= 200) {
               this.getData(true)
-              this.$message.danger('已拒绝');
+              this.deleteDialogVisible = false
+              this.$message.success('删除成功');
             } else {
               console.log(res.message);
             }
@@ -209,49 +217,49 @@
       },
       showDialog(isAdd,row){
         if(isAdd){
-          this.dialogTitle = '添加部门'
-          this.departmentDetail = {
-            id: null,
-            name: null,
-            description: null,
+          this.dialogTitle = '添加'
+          this.dialogDetail = {
+            title: null,
+            content: null,
           }
         }else{
-          this.dialogTitle = '修改部门'
-          this.departmentDetail = {
+          this.dialogTitle = '修改'
+          this.dialogDetail = {
             id: row.id,
-            name: row.name,
-            description: row.description,
+            title: row.title,
+            content: row.content,
           }
         }
         this.dialogVisible = true
       },
       confirm(){
-        if(this.dialogTitle == '添加部门'){
-          this.$api.post('/api/insertDepartment',
-            { "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name},
+        if(this.dialogTitle == '添加'){
+          this.$api.post('/api/insertAchievement',
+            { "title": this.dialogDetail.title,
+              "content": this.dialogDetail.content},
             res => {
               if (res.status >= 200) {
                 this.getData(true)
                 this.dialogVisible = false
-                this.$message.success('创建新部门成功');
+                this.$message.success('创建成功');
               } else {
                 console.log(res.message);
               }
             }
           )
         }else{
-          this.$api.put('/api/updateDepartment',
+          this.$api.put('/api/updateAchievement',
             {
-              "id" : this.departmentDetail.id,
-              "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name
+              "content": this.dialogDetail.content,
+              "achievementId": this.dialogDetail.id,
+              "title":  this.dialogDetail.title,
+              "upUserId": this.$store.state.user.userId
             },
             res => {
               if (res.status >= 200) {
                 this.getData(true)
                 this.dialogVisible = false
-                this.$message.success('修改部门信息成功');
+                this.$message.success('修改成功');
               } else {
                 console.log(res.message);
               }

@@ -43,33 +43,29 @@
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="userId"
-        label="用户id"
+        prop="content"
+        label="项目"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="username"
-        label="用户名"
+        prop="number"
+        label="成员"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column
-        prop="applyType"
-        label="角色类型"
-        min-width="100"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="applyStatus"
-        label="申请状态"
+        prop="status"
+        label="状态"
         min-width="100"
         align="center"
       ></el-table-column>
       <el-table-column label="操作" width="180" align="center">
-        <template slot-scope="scope" v-if="scope.row.applyStatus == '待审核'">
-          <el-button type="success" @click="handlePass(scope.row)">通过</el-button>
-          <el-button type="danger" @click="handleReject(scope.row)">拒绝</el-button>
+        <template slot-scope="scope">
+          <el-button @click="handleRecord(scope.row)" v-if="scope.row.status == '已通过'">纪录</el-button>
+          <el-button type="primary" @click="handleComplete(scope.row)" v-if="scope.row.status == '已通过'">验收</el-button>
+          <el-button type="success" @click="handlePass(scope.row)" v-if="scope.row.status == '待审核'">通过</el-button>
+          <el-button type="danger" @click="handleReject(scope.row)" v-if="scope.row.status == '待审核'">拒绝</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -156,8 +152,8 @@
             }
           )
         }else{
-          this.$api.get('/api/apply/pending',
-            { 'teacherId': 1},
+          this.$api.get('/api/papplyPage',
+            { 'page': this.pageNum },
             res => {
               if (res.status >= 200) {
                 this.list = res.data.data
@@ -182,8 +178,8 @@
         this.getData();
       },
       handlePass(row){
-        this.$api.post('/api/apply/accept',
-          { "applyId": row.id},
+        this.$api.get('/api/papply/accept',
+          { "id": row.id},
           res => {
             if (res.status >= 200) {
               this.getData(true)
@@ -195,12 +191,40 @@
         )
       },
       handleReject(row) {
-        this.$api.post('/api/apply/reject',
-          { "applyId": row.id},
+        this.$api.get('/api/papply/reject',
+          { "id": row.id},
           res => {
             if (res.status >= 200) {
               this.getData(true)
               this.$message.danger('已拒绝');
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      handleRecord(row){
+        this.$api.get('/api/pmark/selectByproname',
+          {
+            "page": 1,
+            "proname": row.content
+          },
+          res => {
+            if (res.status >= 200) {
+              this.getData(true)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      handleComplete(row){
+        this.$api.get('/api/papply/complete',
+          { "id": row.id},
+          res => {
+            if (res.status >= 200) {
+              this.getData(true)
+              this.$message.success('已验收');
             } else {
               console.log(res.message);
             }

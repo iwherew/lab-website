@@ -1,4 +1,5 @@
 <template>
+  <!-- 门户网站文章列表 -->
   <div class="wrap flex-c notice-lists bg">
     <div class="header">{{type.title}}</div>
     <div class="content flex" :style="{'flexDirection':flexDirection}">
@@ -15,26 +16,26 @@
               <div class="icon bg add"></div>
             </div>
 
-            <div class="circle"
-                 @mouseenter="changeActive($event)"
-                 @mouseleave="removeActive($event)"
-                 @click="changeShowSelect"
-            >
-              <div class="icon bg classify"></div>
-            </div>
-            <el-select
-              v-model="departmentSelected"
-              placeholder="筛选部门信息"
-              size="small"
-              v-show="showSelect"
-            >
-              <el-option
-                v-for="(item, index) in departmentList"
-                :key="index"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
+<!--            <div class="circle"-->
+<!--                 @mouseenter="changeActive($event)"-->
+<!--                 @mouseleave="removeActive($event)"-->
+<!--                 @click="changeShowSelect"-->
+<!--            >-->
+<!--              <div class="icon bg classify"></div>-->
+<!--            </div>-->
+<!--            <el-select-->
+<!--              v-model="departmentSelected"-->
+<!--              placeholder="筛选部门信息"-->
+<!--              size="small"-->
+<!--              v-show="showSelect"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="(item, index) in departmentList"-->
+<!--                :key="index"-->
+<!--                :label="item"-->
+<!--                :value="item">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
             <div class="circle"
                  @mouseenter="changeActive($event)"
                  @mouseleave="removeActive($event)"
@@ -55,7 +56,7 @@
         </div>
         <div class="notice-group flex-c">
           <div class="notice-item flex"
-               v-for="(item, index) in noticeList"
+               v-for="(item, index) in articleList"
                :key="index"
                @mouseenter="changeActive($event)"
                @mouseleave="removeActive($event)"
@@ -63,13 +64,18 @@
           >
             <div class="square"></div>
             <div class="title one-line">{{item.title}}</div>
-            <div class="time">{{transformTime(item.time)}}</div>
+            <div class="time">{{item.upDate}}</div>
           </div>
         </div>
         <el-pagination
           background
-          layout="prev, pager, next, jumper"
-          :total="500">
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+          layout="prev, pager, next, total, jumper"
+          :total="totalNum"
+          :current-page="pageNum"
+          :page-size="pageSize"
+          :page-sizes="[10, 20, 30, 100]">
         </el-pagination>
       </div>
     </div>
@@ -86,6 +92,11 @@
           return{
             title: '通知公告',
             imageUrl: schoolImage,
+            queryApi: '/api/announcesPage',
+            insertApi: '/api/insertAnnounce',
+            searchApi: '/api/searchAnnounce',
+            updateApi: '/api/updateAnnounce',
+            idName: "announceId"
           }
         },
       },
@@ -96,7 +107,10 @@
     },
     data(){
       return{
-        noticeList:[
+        totalNum: 0,
+        pageNum: 1,
+        pageSize: 10,
+        articleList:[
           {
             id: 118,
             title: '学术报告：THz for Smart and Safe Future: a special focus on Towards Tbit THz wireless communications',
@@ -150,10 +164,41 @@
         search:'',
         timeout:  null,
         searchList: [],
-        showSearch: false
+        showSearch: false,
       }
     },
+    mounted() {
+      this.searchList = this.loadAll();
+      this.getData()
+    },
     methods:{
+      getData(refresh){
+        if(refresh){
+          this.pageNum = 1
+        }
+        this.$api.get(this.type.queryApi,
+          { 'page': this.pageNum},
+          res => {
+            if (res.status >= 200) {
+              this.articleList = res.data.data
+              this.pageNum = res.data.pageNum,
+                this.pageSize = res.data.pageSize,
+                this.totalNum = res.data.totalNum
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      // 分页导航
+      handleCurrentChange(val) {
+        this.pageNum = val;
+        this.getData();
+      },
+      handleSizeChange(val) {
+        this.pageSize = val;
+        this.getData();
+      },
       loadAll() {
         return [
           { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
@@ -220,32 +265,37 @@
         this.showSearch = !this.showSearch
       },
       handleSelect(item) {
-        console.log(item);
-      },
-      createStateFilter(queryString) {
-        return (item) => {
-          return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1);
-        };
+        this.goToDetail(item.id);
       },
       querySearchAsync(queryString, cb){
-        let searchList = this.searchList;
-        let results = queryString ? searchList.filter(this.createStateFilter(queryString)) : [];
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(results);
-        }, 2000);
+        this.$api.get(this.type.searchApi,
+          { 'search': queryString,
+            'page': 1
+          },
+          res => {
+            if (res.status >= 200) {
+              for (let i of res.data.data) {
+                i.value = i.title;  //将想要展示的数据作为value
+              }
+              cb(res.data.data)
+              // this.articleList = res.data.data
+              // this.pageNum = res.data.pageNum,
+              //   this.pageSize = res.data.pageSize,
+              //   this.totalNum = res.data.totalNum
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       },
       goToDetail(id){
-        let routeData = this.$router.resolve({ path: '/article/articleDetail' ,query:{id:id}});
+        let routeData = this.$router.resolve({ path: '/article/articleDetail' ,query:{articleType: this.type.type,id:id}})
         window.open(routeData.href, '_blank');
       },
       goToNoticeEdit(){
         this.$router.push('/article/articleEdit')
       }
     },
-    mounted() {
-      this.searchList = this.loadAll();
-    }
   }
 </script>
 <style scoped lang="less">
@@ -337,7 +387,7 @@
             background: #00D2D4;
           }
           .title{
-            width: 400px;
+            width: 350px;
             font-size: 16px;
             color: #101010;
           }

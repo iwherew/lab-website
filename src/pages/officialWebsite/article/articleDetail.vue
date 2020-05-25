@@ -4,15 +4,15 @@
       <div class="content flex-c">
         <div class="title">{{context.title}}</div>
         <div class="context-info flex">
-          <div class="context-info-item">作者：{{context.author}}</div>
-          <div class="context-info-item">上传时间：{{transformTime(context.createTime)}}</div>
-          <div class="context-info-item">点击量：{{context.visitorVolume}}</div>
-          <div class="context-info-item flex collect"
-               @mouseenter="changeHover($event)"
-               @mouseleave="removeHover($event)">
-            <div class="icon bg"></div>
-            <span>收藏</span>
-          </div>
+          <div class="context-info-item">作者：{{context.upUserNickname}}</div>
+          <div class="context-info-item">上传时间：{{context.upDate}}</div>
+          <div class="context-info-item">点击量：{{context.visitCount}}</div>
+<!--          <div class="context-info-item flex collect"-->
+<!--               @mouseenter="changeHover($event)"-->
+<!--               @mouseleave="removeHover($event)">-->
+<!--            <div class="icon bg"></div>-->
+<!--            <span>收藏</span>-->
+<!--          </div>-->
           <div class="context-info-item flex edit"
                @mouseenter="changeHover($event)"
                @mouseleave="removeHover($event)"
@@ -31,18 +31,18 @@
           </div>
         </div>
         <div class="divider"></div>
-        <div class="text" v-html="context.detail"></div>
-        <div class="divider"></div>
-        <div class="file-group">
-          <div class="file-item flex" v-for="(item, index) in context.fileList" :key="index">
-            <div class="file-icon bg"></div>
-            <div class="file-name">{{item.name}}</div>
-          </div>
-        </div>
+        <div class="text" v-html="context.content"></div>
+<!--        <div class="divider"></div>-->
+<!--        <div class="file-group">-->
+<!--          <div class="file-item flex" v-for="(item, index) in context.fileList" :key="index">-->
+<!--            <div class="file-icon bg"></div>-->
+<!--            <div class="file-name">{{item.name}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
       <div class="notice-group flex-c">
         <div class="notice-item flex"
-             v-for="(item, index) in noticeList"
+             v-for="(item, index) in articleList"
              :key="index"
              @mouseenter="changeActive($event)"
              @mouseleave="removeActive($event)"
@@ -95,51 +95,95 @@
           ],
         },
         dialogVisible: false,
-        noticeList:[
+        articleList:[],
+        apiUrl:[
           {
-            id: 118,
-            title: '学术报告：THz for Smart and Safe Future: a special focus on Towards Tbit THz wireless communications',
-            time: 1581178630478
+            title: '通知公告',
+            queryApi: '/api/announcesPage',
+            queryIdApi: '/api/announcesId',
+            insertApi: '/api/insertAnnounce',
+            searchApi: '/api/searchAnnounce',
+            updateApi: '/api/updateAnnounce',
+            idName: "announceId",
+            type: "announce",
           },
           {
-            id: 117,
-            title: '讲座：脑机接口在康复与辅助系统中的应用',
-            time: 1581005604000
+            title: '招生信息',
+            queryApi: '/api/jobPage',
+            queryIdApi: '/api/jobId',
+            insertApi: '/api/updateJob',
+            searchApi: '/api/searchJob',
+            updateApi: '/api/updateJob',
+            idName: "jobId",
+            type: "job",
           },
           {
-            id: 116,
-            title: '学术讲座：统计方法前沿研究',
-            time: 1581005604000
+            title: '招生信息',
+            queryApi: '/api/jobPage',
+            queryIdApi: '/api/jobId',
+            insertApi: '/api/updateJob',
+            searchApi: '/api/searchJob',
+            updateApi: '/api/updateJob',
+            idName: "jobId",
+            type: "job",
           },
           {
-            id: 115,
-            title: '院士讲座：创新是科学的灵魂',
-            time: 1580919204000
+            title: '研究成果',
+            queryApi: '/api/achievementPage',
+            queryIdApi: '/api/achievementId',
+            insertApi: '/api/updateAchievement',
+            searchApi: '/api/searchAchievement',
+            updateApi: '/api/updateAchievement',
+            type: "achievementId"
           },
           {
-            id: 114,
-            title: '高雅艺术进校园——中国爱乐乐团来校演出',
-            time: 1580919204000
-          },
-          {
-            id: 113,
-            title: '学术交流与科研评价的现状与挑战',
-            time: 1580919204000
-          },
-          {
-            id: 112,
-            title: '召开新时代网络意识形态安全与高校思想政治教育学术研讨会',
-            time: 1580832804000
-          },
-          {
-            id: 111,
-            title: '新冠病毒潜在中间宿主或为穿山甲',
-            time: 1580832804000
-          },
+            title: '荣誉奖项',
+            queryApi: '/api/awardPage',
+            queryIdApi: '/api/awardId',
+            insertApi: '/api/insertAward',
+            searchApi: '/api/searchAward',
+            updateApi: '/api/updateAward',
+            idName: "awardId",
+            type: "award",
+          }
         ],
+        api: null,
       }
     },
+    mounted() {
+      this.apiUrl.forEach(item => {
+        if(this.$route.query.articleType == item.type)
+          this.api = item
+      })
+      this.getData()
+      this.getArticleList()
+    },
     methods: {
+      getData(){
+        this.$api.get(this.api.queryIdApi,
+          { 'id': this.$route.query.id},
+          res => {
+            if (res.status >= 200) {
+              this.context = res.data
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      getArticleList(){
+        this.$api.get(this.api.queryApi,
+          { 'page': 1},
+          res => {
+            if (res.status >= 200) {
+              this.articleList = res.data.data
+              console.log(this.articleList)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       transformTime,
       changeHover($event) {
         $event.currentTarget.classList.add('hover');
@@ -154,15 +198,13 @@
         $event.currentTarget.classList.remove('active');
       },
       goToDetail(id){
-        this.$router.push({path: '/article/articleDetail', query:{id:id}})
+        let routeData = this.$router.resolve({ path: '/article/articleDetail' ,query:{articleType: this.$route.query.articleType,id:id}})
+        window.open(routeData.href, '_blank');
       },
       goToEdit(id){
-        this.$router.push({path: '/article/articleEdit', query:{id:this.context.id}})
+        this.$router.push({name: 'articleEdit', params:{id:this.context.id}})
       },
     },
-    mounted() {
-      console.log(this.$route.query.id)
-    }
   }
 </script>
 <style scoped lang="less">

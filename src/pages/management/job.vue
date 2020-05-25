@@ -17,6 +17,15 @@
           搜索
         </el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button
+          type="success"
+          icon="search"
+          @click="showDialog(true)"
+        >
+          添加
+        </el-button>
+      </el-form-item>
     </el-form>
     <el-table
       :data="list"
@@ -43,6 +52,12 @@
       <el-table-column
         prop="upNickname"
         label="上传者"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="upDate"
+        label="时间"
         min-width="100"
         align="center"
       ></el-table-column>
@@ -77,16 +92,16 @@
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <el-form ref="form" :model="departmentDetail" label-width="80px">
-        <el-form-item label="部门名称">
-          <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
+      <el-form ref="form" :model="dialogDetail" label-width="80px">
+        <el-form-item label="文章标题">
+          <el-input v-model="dialogDetail.title" placeholder="请输入部门名称"></el-input>
         </el-form-item>
-        <el-form-item label="部门描述">
+        <el-form-item label="文章内容">
           <el-input
             type="textarea"
-            :rows="3"
-            placeholder="请输入部门描述"
-            v-model="departmentDetail.description">
+            :rows="6"
+            placeholder="请输入文章内容"
+            v-model="dialogDetail.content">
           </el-input>
         </el-form-item>
       </el-form>
@@ -104,7 +119,7 @@
       <span>确认删除吗？删除后无法恢复</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">取 消</el-button>
-        <el-button type="danger" @click="confirm()">删 除</el-button>
+        <el-button type="danger" @click="confirmDelete()">删 除</el-button>
       </span>
     </el-dialog>
   </div>
@@ -121,10 +136,9 @@
         dialogVisible: false,
         deleteDialogVisible: false,
         deleteRow: null,
-        departmentDetail:{
-          id: null,
-          name: null,
-          description: null,
+        dialogDetail:{
+          title: null,
+          content: null,
         },
         dialogTitle: null,
       }
@@ -188,7 +202,7 @@
         this.$api.delete('/api/deleteJob',
           {
             "jobId": this.deleteRow.id,
-            "upUserId": this.deleteRow.upUserId
+            "upUserId": this.$store.state.user.userId
           },
           res => {
             if (res.status >= 200) {
@@ -203,49 +217,49 @@
       },
       showDialog(isAdd,row){
         if(isAdd){
-          this.dialogTitle = '添加部门'
-          this.departmentDetail = {
-            id: null,
-            name: null,
-            description: null,
+          this.dialogTitle = '添加'
+          this.dialogDetail = {
+            title: null,
+            content: null,
           }
         }else{
-          this.dialogTitle = '修改部门'
-          this.departmentDetail = {
+          this.dialogTitle = '修改'
+          this.dialogDetail = {
             id: row.id,
-            name: row.name,
-            description: row.description,
+            title: row.title,
+            content: row.content,
           }
         }
         this.dialogVisible = true
       },
       confirm(){
-        if(this.dialogTitle == '添加部门'){
-          this.$api.post('/api/insertDepartment',
-            { "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name},
+        if(this.dialogTitle == '添加'){
+          this.$api.post('/api/insertJob',
+            { "title": this.dialogDetail.title,
+              "content": this.dialogDetail.content},
             res => {
               if (res.status >= 200) {
                 this.getData(true)
                 this.dialogVisible = false
-                this.$message.success('创建新部门成功');
+                this.$message.success('创建成功');
               } else {
                 console.log(res.message);
               }
             }
           )
         }else{
-          this.$api.put('/api/updateDepartment',
+          this.$api.put('/api/updateJob',
             {
-              "id" : this.departmentDetail.id,
-              "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name
+              "content": this.dialogDetail.content,
+              "jobId": this.dialogDetail.id,
+              "title":  this.dialogDetail.title,
+              "upUserId": this.$store.state.user.userId
             },
             res => {
               if (res.status >= 200) {
                 this.getData(true)
                 this.dialogVisible = false
-                this.$message.success('修改部门信息成功');
+                this.$message.success('修改成功');
               } else {
                 console.log(res.message);
               }

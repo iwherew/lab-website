@@ -19,10 +19,23 @@
         achievement:{
           title: '研究成果',
           imageUrl: achievementImage,
+          queryApi: '/api/achievementPage',
+          queryIdApi: '/api/achievementId',
+          insertApi: '/api/updateAchievement',
+          searchApi: '/api/searchAchievement',
+          updateApi: '/api/updateAchievement',
+          type: "achievementId"
         },
         awards: {
           title: '荣誉奖项',
           imageUrl: awardsImage,
+          queryApi: '/api/awardPage',
+          queryIdApi: '/api/awardId',
+          insertApi: '/api/insertAward',
+          searchApi: '/api/searchAward',
+          updateApi: '/api/updateAward',
+          idName: "awardId",
+          type: "award",
         }
       }
     }

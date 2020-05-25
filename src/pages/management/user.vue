@@ -1,29 +1,13 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="search">
-        <el-input
-          v-model="searchForm.name"
-          placeholder="请输入部门名称"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="search"
-          @click="getData(true)"
-          style="marginLeft:20px"
-        >
-          搜索
-        </el-button>
-      </el-form-item>
+    <el-form :inline="true" style="text-align:right">
       <el-form-item>
         <el-button
           type="success"
           icon="search"
-          @click="showDialog(true)"
+          @click="showDialog()"
         >
-          添加
+          添加账号
         </el-button>
       </el-form-item>
     </el-form>
@@ -69,27 +53,19 @@
       </el-pagination>
     </div>
     <el-dialog
-      :title=this.dialogTitle
+      title="添加原始账号"
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <el-form ref="form" :model="departmentDetail" label-width="80px">
-        <el-form-item label="部门名称">
-          <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
-        </el-form-item>
-        <el-form-item label="部门描述">
-          <el-input
-            type="textarea"
-            :rows="3"
-            placeholder="请输入部门描述"
-            v-model="departmentDetail.description">
-          </el-input>
+      <el-form ref="form" label-width="80px">
+        <el-form-item label="账号名称">
+          <el-input v-model="newAccountName" placeholder="请输入账号名称"></el-input>
         </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmDelete()">确 认</el-button>
+        <el-button type="primary" @click="confirm()">确 认</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -100,7 +76,7 @@
       <span>确认删除吗？删除后无法恢复</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">取 消</el-button>
-        <el-button type="danger" @click="confirm()">删 除</el-button>
+        <el-button type="danger" @click="confirmDelete()">删 除</el-button>
       </span>
     </el-dialog>
   </div>
@@ -112,17 +88,11 @@
         totalNum: 0,
         pageNum: 1,
         pageSize: 10,
-        searchForm:{},
         list:[],
         dialogVisible: false,
         deleteDialogVisible: false,
         deleteRow: null,
-        departmentDetail:{
-          id: null,
-          name: null,
-          description: null,
-        },
-        dialogTitle: null,
+        newAccountName: null,
       }
     },
     mounted() {
@@ -161,9 +131,9 @@
         this.deleteDialogVisible = true
       },
       confirmDelete(){
-        this.$api.delete('/api/deleteuserOrigin',
+        this.$api.get('/api/deleteuserOrigin',
           {
-            "account": this.deleteRow.account
+            "id": this.deleteRow.id
           },
           res => {
             if (res.status >= 200) {
@@ -176,58 +146,25 @@
           }
         )
       },
-      showDialog(isAdd,row){
-        if(isAdd){
-          this.dialogTitle = '添加部门'
-          this.departmentDetail = {
-            id: null,
-            name: null,
-            description: null,
-          }
-        }else{
-          this.dialogTitle = '修改部门'
-          this.departmentDetail = {
-            id: row.id,
-            name: row.name,
-            description: row.description,
-          }
-        }
+      showDialog(){
+        this.newAccountName = null
         this.dialogVisible = true
       },
       confirm(){
-        if(this.dialogTitle == '添加部门'){
-          this.$api.post('/api/insertDepartment',
-            { "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name},
-            res => {
-              if (res.status >= 200) {
-                this.getData(true)
-                this.dialogVisible = false
-                this.$message.success('创建新部门成功');
-              } else {
-                console.log(res.message);
-              }
+        this.$api.get('/api/adduserOrigin',
+          {
+            "account": this.newAccountName
+          },
+          res => {
+            if (res.status >= 200) {
+              this.getData(true)
+              this.dialogVisible = false
+              this.$message.success('添加成功');
+            } else {
+              console.log(res.message);
             }
-          )
-        }else{
-          this.$api.put('/api/updateDepartment',
-            {
-              "id" : this.departmentDetail.id,
-              "description": this.departmentDetail.description,
-              "name": this.departmentDetail.name
-            },
-            res => {
-              if (res.status >= 200) {
-                this.getData(true)
-                this.dialogVisible = false
-                this.$message.success('修改部门信息成功');
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
-        }
-
+          }
+        )
       },
     }
   }

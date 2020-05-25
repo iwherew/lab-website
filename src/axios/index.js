@@ -27,8 +27,8 @@ function apiAxios(method, url, params, response) {
   http({
     method: method,
     url: url,
-    data: method === 'POST' || method === 'PUT' ? params : null,
-    params: method === 'GET' || method === 'DELETE' ? params : null,
+    data:  method === 'POST' || method === 'PUT' || method === 'DELETE'? params : null,
+    params: method === 'GET'  ? params : null,
   }).then(function (res) {
     response(res);
   }).catch(function (err) {
@@ -37,7 +37,6 @@ function apiAxios(method, url, params, response) {
 }
 
 http.interceptors.request.use(config => {
-  console.log("token ",store.state.user.token)
   if (store.state.user.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
     config.headers.common['Token']=store.state.user.token
   }

@@ -15,6 +15,13 @@
         recruitment:{
           title: '招生信息',
           imageUrl: recruitmentImage,
+          queryApi: '/api/jobPage',
+          queryIdApi: '/api/jobId',
+          insertApi: '/api/updateJob',
+          searchApi: '/api/searchJob',
+          updateApi: '/api/updateJob',
+          idName: "jobId",
+          type: "job",
         }
       }
     }
