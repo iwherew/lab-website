@@ -4,7 +4,7 @@
     <div class="left-part">
       <div class="title">我的团队</div>
       <div class="subtitle">在这里查看你参与的团队</div>
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item v-for="(item, index) in teamList" :key="index" name="1">
           <template slot="title">
             <div class="collapse-title">{{item.teamName}}</div>
@@ -162,7 +162,25 @@
         ],
       }
     },
+    mounted(){
+      this.getData()
+    },
     methods:{
+      getData(){
+        this.$api.get( '/api/pmark/selectByUsername',
+          {
+            "page": 1,
+            "username": this.$store.state.user.nickName
+          },
+          res => {
+            if (res.status >= 200) {
+              this.allMember.push(...res.data.data)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       changePraise(id){
         let hasChanged = false
         this.newestList.forEach((item,index) => {

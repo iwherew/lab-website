@@ -30,18 +30,19 @@
       <div class="avatar-wrap" v-else>
         <el-dropdown @command="handleCommand">
           <div class="avatar user-avatar bg"></div>
-          <div class="red-dot">7</div>
+<!--          <div class="red-dot">7</div>-->
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="/personalPage/0">个人主页</el-dropdown-item>
             <el-dropdown-item command="/forum">内部论坛</el-dropdown-item>
-            <el-dropdown-item command="/personalPage/3">资源查询</el-dropdown-item>
-            <el-dropdown-item command="/personalPage/0">部门通知
-              <div class="red-dot">5</div>
-            </el-dropdown-item>
-            <el-dropdown-item command="/personalPage/2">我的消息
-              <div class="red-dot">2</div>
-            </el-dropdown-item>
             <el-dropdown-item command="/management">后台管理</el-dropdown-item>
+            <el-dropdown-item command="/forum/myTeam">我的团队</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/0">通知公告</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/1">招生信息</el-dropdown-item>
+            <el-dropdown-item command="/personalPage/2">研究成果
+<!--              <div class="red-dot">5</div>-->
+            </el-dropdown-item>
+            <el-dropdown-item command="/personalPage/3">荣誉奖项
+<!--              <div class="red-dot">2</div>-->
+            </el-dropdown-item>
             <el-dropdown-item command="logout">退出登陆</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

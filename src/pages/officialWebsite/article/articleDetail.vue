@@ -16,7 +16,7 @@
           <div class="context-info-item flex edit"
                @mouseenter="changeHover($event)"
                @mouseleave="removeHover($event)"
-               @click="goToEdit"
+               @click="goToEdit($route.query.id)"
           >
             <div class="icon bg"></div>
             <span>编辑</span>
@@ -61,7 +61,7 @@
       <div class="dialog-text">确认删除吗？</div>
       <span slot="footer" class="dialog-footer">
               <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-              <el-button size="small" type="danger" @click="dialogVisible = false">删 除</el-button>
+              <el-button size="small" type="danger" @click="deleteArticle">删 除</el-button>
             </span>
     </el-dialog>
   </div>
@@ -104,6 +104,7 @@
             insertApi: '/api/insertAnnounce',
             searchApi: '/api/searchAnnounce',
             updateApi: '/api/updateAnnounce',
+            deleteApi: '/api/deleteAnnounce',
             idName: "announceId",
             type: "announce",
           },
@@ -111,19 +112,10 @@
             title: '招生信息',
             queryApi: '/api/jobPage',
             queryIdApi: '/api/jobId',
-            insertApi: '/api/updateJob',
+            insertApi: '/api/insertJob',
             searchApi: '/api/searchJob',
             updateApi: '/api/updateJob',
-            idName: "jobId",
-            type: "job",
-          },
-          {
-            title: '招生信息',
-            queryApi: '/api/jobPage',
-            queryIdApi: '/api/jobId',
-            insertApi: '/api/updateJob',
-            searchApi: '/api/searchJob',
-            updateApi: '/api/updateJob',
+            deleteApi: '/api/deleteJob',
             idName: "jobId",
             type: "job",
           },
@@ -131,10 +123,12 @@
             title: '研究成果',
             queryApi: '/api/achievementPage',
             queryIdApi: '/api/achievementId',
-            insertApi: '/api/updateAchievement',
+            insertApi: '/api/insertAchievement',
             searchApi: '/api/searchAchievement',
             updateApi: '/api/updateAchievement',
-            type: "achievementId"
+            deleteApi: '/api/deleteAchievement',
+            idName: "achievementId",
+            type: "achievement"
           },
           {
             title: '荣誉奖项',
@@ -143,6 +137,7 @@
             insertApi: '/api/insertAward',
             searchApi: '/api/searchAward',
             updateApi: '/api/updateAward',
+            deleteApi: '/api/deleteAward',
             idName: "awardId",
             type: "award",
           }
@@ -202,8 +197,26 @@
         window.open(routeData.href, '_blank');
       },
       goToEdit(id){
-        this.$router.push({name: 'articleEdit', params:{id:this.context.id}})
+        this.$router.push({ path: '/article/articleEdit' ,query:{type:'edit',articleType: this.$route.query.articleType,id:id}})
       },
+      deleteArticle(){
+        let params = {}
+        params[this.api.idName]=this.$route.query.id
+        let otherParams = {
+          "upUserId": this.$store.state.user.userId
+        }
+        Object.assign(params, otherParams);
+        this.$api.delete(this.api.deleteApi,
+          params,
+          res => {
+            if (res.status >= 200) {
+              this.$router.push('/')
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      }
     },
   }
 </script>

@@ -5,38 +5,34 @@
       <div class="title">创建团队</div>
       <div class="subtitle">在这里可以创建你的团队并开始一个新的项目</div>
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="团队名称：">
-          <el-input v-model="form.teamName"></el-input>
-        </el-form-item>
-        <el-form-item label="团队描述：">
-          <el-input v-model="form.teamDesc"></el-input>
+        <el-form-item label="部门名称：">
+          <el-select v-model="form.departmentId" placeholder="请选择部门">
+            <el-option
+              v-for="item in allDepartment"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="团队成员：">
-          <el-select
-            v-model="value"
-            multiple
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入关键词"
-            :remote-method="remoteMethod"
-            :loading="loading">
+          <el-select v-model="form.member" multiple placeholder="请选择成员">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in allMember"
+              :key="item.id"
+              :label="item.memberName"
+              :value="item.memberName">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="项目名称：">
           <el-input v-model="form.projectName"></el-input>
         </el-form-item>
-        <el-form-item label="项目描述：">
-          <el-input v-model="form.projectDesc"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="项目描述：">-->
+<!--          <el-input v-model="form.projectDesc"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item label="">
-          <el-button type="primary" plain @click="submit">创建团队</el-button>
+          <el-button type="primary" plain @click="submit" :disabled=check()>创建团队</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -56,34 +52,9 @@
     components:{quickAccess,tagGroup,articleList},
     data(){
       return{
-        form:{
-          teamName:'',
-          teamDesc:'',
-          projectName:'',
-          projectDesc:'',
-
-        },
-        options: [],
-        value: [],
-        list: [],
-        loading: false,
-        states: ["Alabama", "Alaska", "Arizona",
-          "Arkansas", "California", "Colorado",
-          "Connecticut", "Delaware", "Florida",
-          "Georgia", "Hawaii", "Idaho", "Illinois",
-          "Indiana", "Iowa", "Kansas", "Kentucky",
-          "Louisiana", "Maine", "Maryland",
-          "Massachusetts", "Michigan", "Minnesota",
-          "Mississippi", "Missouri", "Montana",
-          "Nebraska", "Nevada", "New Hampshire",
-          "New Jersey", "New Mexico", "New York",
-          "North Carolina", "North Dakota", "Ohio",
-          "Oklahoma", "Oregon", "Pennsylvania",
-          "Rhode Island", "South Carolina",
-          "South Dakota", "Tennessee", "Texas",
-          "Utah", "Vermont", "Virginia",
-          "Washington", "West Virginia", "Wisconsin",
-          "Wyoming"],
+        form:{},
+        allDepartment:[],
+        allMember:[],
         newestList:[
           {
             id: 7,
@@ -146,30 +117,65 @@
       }
     },
     mounted() {
-      this.list = this.states.map(item => {
-        return { value: `value:${item}`, label: `${item}` };
-      });
+      this.getAllDepartment()
+      this.getAllMember()
     },
     methods:{
-      remoteMethod(query) {
-        if (query !== '') {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options = this.list.filter(item => {
-              return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-          }, 200);
-        } else {
-          this.options = [];
+      getAllDepartment(){
+        this.$api.get( '/api/departments',
+          {},
+          res => {
+            if (res.status >= 200) {
+              this.allDepartment.push(...res.data.data)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      getAllMember(){
+        this.$api.get( '/api/members',
+          {},
+          res => {
+            if (res.status >= 200) {
+              this.allMember.push(...res.data.data)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      check(){
+        if(this.form.departmentId && this.form.member && this.form.projectName){
+          return false
+        }else{
+          return true
         }
       },
       submit(){
-        this.$message({
-          message: '创建成功',
-          type: 'success'
-        });
+        let memberString = ''
+        this.form.member.forEach(item => {
+          memberString += item + " "
+        })
+        this.$api.post( '/api/papply',
+          {
+            "content": this.form.projectName,
+            "departmentId": this.form.departmentId,
+            "number": memberString,
+            "userId": this.$store.state.user.userId
+          },
+          res => {
+            if (res.status >= 200) {
+              this.$message({
+                message: '创建成功',
+                type: 'success'
+              });
+              this.$router.push('/forum/myTeam')
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       },
       changePraise(id){
         let hasChanged = false

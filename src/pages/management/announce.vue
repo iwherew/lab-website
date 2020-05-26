@@ -105,7 +105,7 @@
     >
       <el-form ref="form" :model="dialogDetail" label-width="80px">
         <el-form-item label="文章标题">
-          <el-input v-model="dialogDetail.title" placeholder="请输入部门名称"></el-input>
+          <el-input v-model="dialogDetail.title" placeholder="请输入文章标题"></el-input>
         </el-form-item>
         <el-form-item label="文章内容">
           <el-input

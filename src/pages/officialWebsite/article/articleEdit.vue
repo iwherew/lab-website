@@ -3,36 +3,36 @@
     <div class="wrap flex">
       <div class="content">
         <el-form ref="form" label-width="100px">
-          <el-form-item label="通知部门：">
-            <el-checkbox :indeterminate="isIndeterminate" border v-model="checkedAll" @change="handleCheckAllChange">
-              全选
-            </el-checkbox>
-            <el-checkbox-group v-model="context.checkedDepartment" size="medium" @change="handleCheckedCitiesChange">
-              <el-checkbox v-for="(item,index) in allDepartment" border :label="item" :key="index"></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
+<!--          <el-form-item label="通知部门：">-->
+<!--            <el-checkbox :indeterminate="isIndeterminate" border v-model="checkedAll" @change="handleCheckAllChange">-->
+<!--              全选-->
+<!--            </el-checkbox>-->
+<!--            <el-checkbox-group v-model="context.checkedDepartment" size="medium" @change="handleCheckedCitiesChange">-->
+<!--              <el-checkbox v-for="(item,index) in allDepartment" border :label="item" :key="index"></el-checkbox>-->
+<!--            </el-checkbox-group>-->
+<!--          </el-form-item>-->
           <el-form-item label="文章标题：">
             <el-input v-model="context.title" placeholder="请输入文章标题"></el-input>
           </el-form-item>
           <el-form-item label="正文内容：">
             <div class="white">
-              <editor v-model="context.detail" :isClear="isClear" @change="change"></editor>
+              <editor v-model="context.content" :isClear="isClear" @change="change"></editor>
             </div>
           </el-form-item>
         </el-form>
       </div>
       <div class="file">
-        <el-button type="success">保存文章</el-button>
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :file-list="context.fileList">
-          <el-button type="primary">点击上传文件</el-button>
-        </el-upload>
+        <el-button type="success" @click="save">保存文章</el-button>
+<!--        <el-upload-->
+<!--          class="upload-demo"-->
+<!--          action="https://jsonplaceholder.typicode.com/posts/"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :before-remove="beforeRemove"-->
+<!--          multiple-->
+<!--          :file-list="context.fileList">-->
+<!--          <el-button type="primary">点击上传文件</el-button>-->
+<!--        </el-upload>-->
       </div>
     </div>
   </div>
@@ -55,25 +55,130 @@
         checkedAll: false,
         isIndeterminate: false, //全选框不确定状态
         context: {
-          id: null,
           title: null,
-          author: null,
-          createTime: null,
-          visitorVolume: null,
-          detail: ``,
-          fileList: [{
-            name: `关于公布学校管理服务部门职责的通知 杭电人【2019】 85号.pdf`,
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }, {
-            name: `网络开学工作.pdf`,
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }],
-          checkedDepartment: [
-          ],
+          content: null
         },
+        // context: {
+        //   id: null,
+        //   title: null,
+        //   author: null,
+        //   createTime: null,
+        //   visitorVolume: null,
+        //   detail: ``,
+        //   fileList: [{
+        //     name: `关于公布学校管理服务部门职责的通知 杭电人【2019】 85号.pdf`,
+        //     url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        //   }, {
+        //     name: `网络开学工作.pdf`,
+        //     url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        //   }],
+        //   checkedDepartment: [
+        //   ],
+        // },
+        apiUrl:[
+          {
+            title: '通知公告',
+            queryApi: '/api/announcesPage',
+            queryIdApi: '/api/announcesId',
+            insertApi: '/api/insertAnnounce',
+            searchApi: '/api/searchAnnounce',
+            updateApi: '/api/updateAnnounce',
+            idName: "announceId",
+            type: "announce",
+          },
+          {
+            title: '招生信息',
+            queryApi: '/api/jobPage',
+            queryIdApi: '/api/jobId',
+            insertApi: '/api/insertJob',
+            searchApi: '/api/searchJob',
+            updateApi: '/api/updateJob',
+            idName: "jobId",
+            type: "job",
+          },
+          {
+            title: '研究成果',
+            queryApi: '/api/achievementPage',
+            queryIdApi: '/api/achievementId',
+            insertApi: '/api/insertAchievement',
+            searchApi: '/api/searchAchievement',
+            updateApi: '/api/updateAchievement',
+            idName: "achievementId",
+            type: "achievement"
+          },
+          {
+            title: '荣誉奖项',
+            queryApi: '/api/awardPage',
+            queryIdApi: '/api/awardId',
+            insertApi: '/api/insertAward',
+            searchApi: '/api/searchAward',
+            updateApi: '/api/updateAward',
+            idName: "awardId",
+            type: "award",
+          }
+        ],
+        api: null,
       }
     },
+    mounted(){
+      this.apiUrl.forEach(item => {
+        if(this.$route.query.articleType == item.type)
+          this.api = item
+      })
+      this.getData()
+    },
     methods: {
+      getData(){
+        this.$api.get(this.api.queryIdApi,
+          { 'id': this.$route.query.id},
+          res => {
+            if (res.status >= 200) {
+              this.context = res.data
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      save(){
+        if(this.$route.query.type == 'add'){
+          this.$api.post(this.api.insertApi,
+            {
+              "title": this.context.title,
+              "content": this.context.content,
+              "savePath": "none",
+              "upUserId": this.$store.state.user.userId,
+            },
+            res => {
+              if (res.status >= 200) {
+                this.$router.back()
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }else{
+          let params = {}
+          params[this.api.idName]=this.$route.query.id
+          let otherParams = {
+            "title": this.context.title,
+            "content": this.context.content,
+            "upUserId": this.$store.state.user.userId,
+            "savePath": "none",
+          }
+          Object.assign(params, otherParams);
+          this.$api.put(this.api.updateApi,
+            params,
+            res => {
+              if (res.status >= 200) {
+                this.$router.push({ path: '/article/articleDetail' ,query:{articleType: this.$route.query.articleType,id:this.$route.query.id}})
+              } else {
+                console.log(res.message);
+              }
+            }
+          )
+        }
+      },
       change(val){
         console.log(val)
       },
@@ -124,7 +229,7 @@
     }
 
     .file {
-      margin-top: 170px;
+      /*margin-top: 170px;*/
       margin-left: 50px;
     }
   }

@@ -17,7 +17,7 @@
           imageUrl: recruitmentImage,
           queryApi: '/api/jobPage',
           queryIdApi: '/api/jobId',
-          insertApi: '/api/updateJob',
+          insertApi: '/api/insertJob',
           searchApi: '/api/searchJob',
           updateApi: '/api/updateJob',
           idName: "jobId",

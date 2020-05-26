@@ -38,17 +38,17 @@
             iconActiveUrl: icon02active,
             url: '/forum/myTeam'
           },
-          {
-            name: '收藏',
-            iconUrl: icon03,
-            iconActiveUrl: icon03active,
-          },
-          {
-            name: '退出论坛',
-            iconUrl: icon04,
-            iconActiveUrl: icon04active,
-            url: '/'
-          },
+          // {
+          //   name: '收藏',
+          //   iconUrl: icon03,
+          //   iconActiveUrl: icon03active,
+          // },
+          // {
+          //   name: '退出论坛',
+          //   iconUrl: icon04,
+          //   iconActiveUrl: icon04active,
+          //   url: '/'
+          // },
         ]
       }
     },

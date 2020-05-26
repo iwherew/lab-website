@@ -107,7 +107,7 @@
       <span>确认删除吗？删除后无法恢复</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">取 消</el-button>
-        <el-button type="danger" @click="confirm()">删 除</el-button>
+        <el-button type="danger" @click="confirmDelete()">删 除</el-button>
       </span>
     </el-dialog>
   </div>
@@ -188,14 +188,14 @@
         this.deleteDialogVisible = true
       },
       confirmDelete(){
-        this.$api.delete('/api/deleteDepartment',
+        this.$api.get('/api/deleteById',
           {
             "id" : this.deleteRow.id,
           },
           res => {
             if (res.status >= 200) {
               this.getData(true)
-              this.dialogVisible = false
+              this.deleteDialogVisible = false
               this.$message.success('删除成功');
             } else {
               console.log(res.message);
@@ -229,7 +229,7 @@
             res => {
               if (res.status >= 200) {
                 this.getData(true)
-                this.deleteDialogVisible = false
+                this.dialogVisible = false
                 this.$message.success('创建新部门成功');
               } else {
                 console.log(res.message);

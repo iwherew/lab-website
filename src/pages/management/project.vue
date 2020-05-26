@@ -1,22 +1,6 @@
 <template>
   <div class="container">
     <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="search">
-        <el-input
-          v-model="searchForm.userId"
-          placeholder="请输入用户ID"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="search"
-          @click="getData(true)"
-          style="marginLeft:20px"
-        >
-          搜索
-        </el-button>
-      </el-form-item>
       <el-form-item>
         <el-button
           icon="search"
@@ -45,6 +29,12 @@
       <el-table-column
         prop="content"
         label="项目"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="departmentName"
+        label="部门"
         min-width="100"
         align="center"
       ></el-table-column>
@@ -123,50 +113,66 @@
           name: null,
           description: null,
         },
+        allDepartment:[],
         dialogTitle: null,
       }
     },
     mounted() {
-      this.getData()
+      this.getAllDepartment()
     },
     methods:{
+      getAllDepartment(){
+        this.$api.get( '/api/departments',
+          {},
+          res => {
+            if (res.status >= 200) {
+              this.allDepartment.push(...res.data.data)
+              this.getData()
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       getData(refresh){
+
         if(refresh){
           this.pageNum = 1
         }
+        let url = null
+        let params = {}
+
         if(this.searchForm.name){
-          this.$api.get('/api/searchDepartment',
-            {
-              'page': this.pageNum,
-              'search': this.searchForm.name,
-            },
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/searchDepartment'
+          params = {
+            'page': this.pageNum,
+            'search': this.searchForm.name,
+          }
         }else{
-          this.$api.get('/api/papplyPage',
-            { 'page': this.pageNum },
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/papplyPage'
+          params =  { 'page': this.pageNum }
         }
 
+        this.$api.get(url,params,
+          res => {
+            if (res.status >= 200) {
+              let tempList = res.data.data
+              tempList.map(item =>{
+                this.allDepartment.forEach(departmentItem =>{
+                  if(item.departmentId == departmentItem.id){
+                    item.departmentName = departmentItem.name
+                  }
+                })
+              })
+              this.list = tempList
+              this.pageNum = res.data.pageNum,
+                this.pageSize = res.data.pageSize,
+                this.totalNum = res.data.totalNum
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       },
       // 分页导航
       handleCurrentChange(val) {

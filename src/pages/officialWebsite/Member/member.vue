@@ -21,10 +21,11 @@
           imageUrl: achievementImage,
           queryApi: '/api/achievementPage',
           queryIdApi: '/api/achievementId',
-          insertApi: '/api/updateAchievement',
+          insertApi: '/api/insertAchievement',
           searchApi: '/api/searchAchievement',
           updateApi: '/api/updateAchievement',
-          type: "achievementId"
+          idName: "achievementId",
+          type: "achievement"
         },
         awards: {
           title: '荣誉奖项',

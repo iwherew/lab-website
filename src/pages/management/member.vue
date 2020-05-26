@@ -56,7 +56,14 @@
         align="center"
       ></el-table-column>
       <el-table-column
+        prop="departmentName"
+        label="部门名称"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
         prop="memberType"
+        :formatter=formatter
         label="成员权限"
         min-width="100"
         align="center"
@@ -126,6 +133,7 @@
         pageSize: 10,
         searchForm:{},
         list:[],
+        allDepartment: [],
         dialogVisible: false,
         deleteDialogVisible: false,
         deleteRow: null,
@@ -138,46 +146,60 @@
       }
     },
     mounted() {
-      this.getData()
+      this.getAllDepartment()
     },
     methods:{
+      getAllDepartment(){
+        this.$api.get( '/api/departments',
+          {},
+          res => {
+            if (res.status >= 200) {
+              this.allDepartment.push(...res.data.data)
+              this.getData()
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       getData(refresh){
         if(refresh){
           this.pageNum = 1
         }
+        let url = null
+        let params = {}
+
         if(this.searchForm.name){
-          this.$api.get('/api/searchMember',
-            {
-              'page': this.pageNum,
-              'search': this.searchForm.name,
-            },
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/searchMember'
+          params = {
+            'page': this.pageNum,
+            'search': this.searchForm.name,
+          }
         }else{
-          this.$api.get('/api/memberPage',
-            { 'page': this.pageNum},
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/memberPage'
+          params = { 'page': this.pageNum}
         }
 
+        this.$api.get(url,params,
+          res => {
+            if (res.status >= 200) {
+              let tempList = res.data.data
+              tempList.map(item =>{
+                this.allDepartment.forEach(departmentItem =>{
+                  if(item.departmentId == departmentItem.id){
+                    item.departmentName = departmentItem.name
+                  }
+                })
+              })
+              this.list = tempList
+              this.pageNum = res.data.pageNum,
+                this.pageSize = res.data.pageSize,
+                this.totalNum = res.data.totalNum
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       },
       // 分页导航
       handleCurrentChange(val) {
@@ -262,21 +284,20 @@
 
       },
       formatter(row) {
-        this.$api.get('/api/departmentId',
-          {
-            "id" : row.departmentId,
-          },
-          res => {
-            if (res.status >= 200) {
-              console.log(res.data.name)
-              return res.data.name;
-            } else {
-              console.log(res.message);
-              return "无"
-            }
-          }
-        )
-        return "无"
+        switch (row.memberType) {
+          case 'student':
+            return "学生"
+            break
+          case 'teacher':
+            return "教师"
+            break
+          case 'admin':
+            return "管理员"
+            break
+          case 'root':
+            return "超级管理员"
+            break
+        }
       },
     }
   }

@@ -1,31 +1,15 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="search">
-        <el-input
-          v-model="searchForm.userId"
-          placeholder="请输入用户ID"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="search"
-          @click="getData(true)"
-          style="marginLeft:20px"
-        >
-          搜索
-        </el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          icon="search"
-          @click="showDialog(true)"
-        >
-          添加
-        </el-button>
-      </el-form-item>
-    </el-form>
+<!--    <el-form :inline="true" :model="searchForm" style="text-align:right">-->
+<!--      <el-form-item>-->
+<!--        <el-button-->
+<!--          icon="search"-->
+<!--          @click="showDialog(true)"-->
+<!--        >-->
+<!--          添加-->
+<!--        </el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
     <el-table
       :data="list"
       style="width: 100%"
@@ -55,7 +39,14 @@
         align="center"
       ></el-table-column>
       <el-table-column
+        prop="departmentName"
+        label="部门"
+        min-width="100"
+        align="center"
+      ></el-table-column>
+      <el-table-column
         prop="applyType"
+        :formatter=formatter
         label="角色类型"
         min-width="100"
         align="center"
@@ -73,19 +64,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="pagination">
-      <el-pagination
-        background
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-        layout="prev, pager, next, total, jumper"
-        :total="totalNum"
-        :current-page="pageNum"
-        :page-size="pageSize"
-        :page-sizes="[10, 20, 30, 100]"
-      >
-      </el-pagination>
-    </div>
+<!--    <div class="pagination">-->
+<!--      <el-pagination-->
+<!--        background-->
+<!--        @current-change="handleCurrentChange"-->
+<!--        @size-change="handleSizeChange"-->
+<!--        layout="prev, pager, next, total, jumper"-->
+<!--        :total="totalNum"-->
+<!--        :current-page="pageNum"-->
+<!--        :page-size="pageSize"-->
+<!--        :page-sizes="[10, 20, 30, 100]"-->
+<!--      >-->
+<!--      </el-pagination>-->
+<!--    </div>-->
     <el-dialog
       :title=this.dialogTitle
       :visible.sync="dialogVisible"
@@ -128,49 +119,64 @@
           description: null,
         },
         dialogTitle: null,
+        allDepartment:[],
       }
     },
     mounted() {
-      this.getData()
+      this.getAllDepartment()
     },
     methods:{
+      getAllDepartment(){
+        this.$api.get( '/api/departments',
+          {},
+          res => {
+            if (res.status >= 200) {
+              this.allDepartment.push(...res.data.data)
+              this.getData()
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       getData(refresh){
         if(refresh){
           this.pageNum = 1
         }
+        let url = null
+        let params = {}
+
         if(this.searchForm.name){
-          this.$api.get('/api/searchDepartment',
-            {
-              'page': this.pageNum,
-              'search': this.searchForm.name,
-            },
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/searchDepartment'
+          params = {
+            'page': this.pageNum,
+            'search': this.searchForm.name,
+          }
         }else{
-          this.$api.get('/api/apply/pending',
-            { 'teacherId': 1},
-            res => {
-              if (res.status >= 200) {
-                this.list = res.data.data
-                this.pageNum = res.data.pageNum,
-                  this.pageSize = res.data.pageSize,
-                  this.totalNum = res.data.totalNum
-              } else {
-                console.log(res.message);
-              }
-            }
-          )
+          url = '/api/apply/pending'
+          params = { 'teacherId': 1}
         }
 
+        this.$api.get(url,params,
+          res => {
+            if (res.status >= 200) {
+              let tempList = res.data.data
+              tempList.map(item =>{
+                this.allDepartment.forEach(departmentItem =>{
+                  if(item.departmentId == departmentItem.id){
+                    item.departmentName = departmentItem.name
+                  }
+                })
+              })
+              this.list = tempList
+              this.pageNum = res.data.pageNum,
+                this.pageSize = res.data.pageSize,
+                this.totalNum = res.data.totalNum
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       },
       // 分页导航
       handleCurrentChange(val) {
@@ -182,8 +188,8 @@
         this.getData();
       },
       handlePass(row){
-        this.$api.post('/api/apply/accept',
-          { "applyId": row.id},
+        this.$api.get('/api/apply/accept',
+          { "id": row.id},
           res => {
             if (res.status >= 200) {
               this.getData(true)
@@ -195,8 +201,8 @@
         )
       },
       handleReject(row) {
-        this.$api.post('/api/apply/reject',
-          { "applyId": row.id},
+        this.$api.get('/api/apply/reject',
+          { "id": row.id},
           res => {
             if (res.status >= 200) {
               this.getData(true)
@@ -259,6 +265,22 @@
           )
         }
 
+      },
+      formatter(row) {
+        switch (row.applyType) {
+          case 'student':
+            return "学生"
+            break
+          case 'teacher':
+            return "教师"
+            break
+          case 'admin':
+            return "管理员"
+            break
+          case 'root':
+            return "超级管理员"
+            break
+        }
       },
     }
   }

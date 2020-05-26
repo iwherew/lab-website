@@ -3,7 +3,7 @@
     <div class="login flex-c" v-if="step == 0">
       <div class="title">欢迎来到实验室</div>
       <div class="icon bg"></div>
-      <input type="text" v-model="username" placeholder="请输入学号或邮箱">
+      <input type="text" v-model="username" placeholder="请输入账号或邮箱">
       <input type="password" v-model="password" placeholder="请输入密码">
       <div class="login-btn" @click="login">立即登录</div>
       <div class="bottom-text" @click="toRegister">没有账号？这里注册</div>
@@ -16,7 +16,7 @@
       <div class="wrap flex-c" v-if="step == 1">
         <el-form ref="form">
           <el-form-item>
-            <el-input v-model="registerSno" placeholder="你的杭电学号是什么"></el-input>
+            <el-input v-model="registerSno" placeholder="你的账号是什么"></el-input>
           </el-form-item>
           <el-form-item>
             <el-input v-model="registerPassword" placeholder="必须由6-18位字母、数字组成" show-password></el-input>
@@ -121,12 +121,12 @@
         }
       },
       checkSno(){
-        let reg = /^\d{1,}$/
+        let reg = /\S/
         let pattern = new RegExp(reg);
         let result = pattern.test(this.registerSno)
         if(!result){
           this.registerSno = null
-          this.registerErrorMsg = "学号应由纯数字组成"
+          this.registerErrorMsg = "账号名称不为空"
         }
         return result
       },

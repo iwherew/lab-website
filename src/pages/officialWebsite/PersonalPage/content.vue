@@ -3,14 +3,14 @@
     <div class="select-bar flex">
       <div class="select-bar-wrap">
         <div :class="{'select-bar-item':true,'active':activeIndex==index}"
-             v-for="(item, index) in selectBarItems"
+             v-for="(item, index) in apiUrl"
              @click="clickBar(index)"
         >{{item.title}}</div>
       </div>
 
     </div>
     <div class="right-part flex-c">
-      <article-list-component :title="selectBarItems[activeIndex].title"/>
+      <article-list-component :apiUrl="apiUrl[activeIndex]"/>
     </div>
   </div>
 </template>
@@ -21,24 +21,52 @@
     data(){
       return{
         activeIndex: 0,
-        selectBarItems:[
+        apiUrl:[
           {
-            title: '部门消息',
-            component: ''
+            title: '通知公告',
+            queryApi: '/api/announcesPage',
+            queryIdApi: '/api/announcesId',
+            insertApi: '/api/insertAnnounce',
+            searchApi: '/api/searchAnnounce',
+            updateApi: '/api/updateAnnounce',
+            deleteApi: '/api/deleteAnnounce',
+            idName: "announceId",
+            type: "announce",
           },
           {
-            title: '我的收藏',
-            component: ''
+            title: '招生信息',
+            queryApi: '/api/jobPage',
+            queryIdApi: '/api/jobId',
+            insertApi: '/api/insertJob',
+            searchApi: '/api/searchJob',
+            updateApi: '/api/updateJob',
+            deleteApi: '/api/deleteJob',
+            idName: "jobId",
+            type: "job",
           },
           {
-            title: '我的消息',
-            component: ''
+            title: '研究成果',
+            queryApi: '/api/achievementPage',
+            queryIdApi: '/api/achievementId',
+            insertApi: '/api/insertAchievement',
+            searchApi: '/api/searchAchievement',
+            updateApi: '/api/updateAchievement',
+            deleteApi: '/api/deleteAchievement',
+            idName: "achievementId",
+            type: "achievement"
           },
           {
-            title: '资源查询',
-            component: ''
-          },
-        ]
+            title: '荣誉奖项',
+            queryApi: '/api/awardPage',
+            queryIdApi: '/api/awardId',
+            insertApi: '/api/insertAward',
+            searchApi: '/api/searchAward',
+            updateApi: '/api/updateAward',
+            deleteApi: '/api/deleteAward',
+            idName: "awardId",
+            type: "award",
+          }
+        ],
       }
     },
     computed:{

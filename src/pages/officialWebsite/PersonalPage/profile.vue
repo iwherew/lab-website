@@ -5,14 +5,14 @@
     <div class="info">
       <div class="title gray flex">
         <div>个人资料</div>
-        <div class="id">id： {{user.id}}</div>
+        <div class="id">id： {{user.userId}}</div>
       </div>
-      <div class="nickname">昵称： {{user.nickname}}</div>
-      <div class="phone">手机：{{user.phone}}</div>
-      <div class="email">邮箱：{{user.email}}</div>
-      <div class="self-introduction">个人介绍： {{user.selfIntroduction}}</div>
+      <div class="nickname">昵称： {{user.nickName}}</div>
+      <div class="phone">角色：{{formatter(user.role[0])}}</div>
+<!--      <div class="email">邮箱：{{user.email}}</div>-->
+<!--      <div class="self-introduction">个人介绍： {{user.selfIntroduction}}</div>-->
     </div>
-    <div class="forum-btn" @click="$router.push('/forum')">进入内部论坛</div>
+    <div class="forum-btn cp" @click="$router.push('/forum')">进入内部论坛</div>
   </div>
 </template>
 <script>
@@ -21,6 +21,24 @@
       user(){
         return this.$store.state.user
       }
+    },
+    methods:{
+      formatter(type) {
+        switch (type) {
+          case 'student':
+            return "学生"
+            break
+          case 'teacher':
+            return "教师"
+            break
+          case 'admin':
+            return "管理员"
+            break
+          case 'root':
+            return "超级管理员"
+            break
+        }
+      },
     }
   }
 </script>
