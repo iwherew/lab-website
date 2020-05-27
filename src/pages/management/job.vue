@@ -88,29 +88,29 @@
       </el-pagination>
     </div>
     <el-dialog
-      :title=this.dialogTitle
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
-      <el-form ref="form" :model="dialogDetail" label-width="80px">
-        <el-form-item label="文章标题">
-          <el-input v-model="dialogDetail.title" placeholder="请输入文章标题"></el-input>
-        </el-form-item>
-        <el-form-item label="文章内容">
-          <el-input
-            type="textarea"
-            :rows="6"
-            placeholder="请输入文章内容"
-            v-model="dialogDetail.content">
-          </el-input>
-        </el-form-item>
-      </el-form>
+    :title=this.dialogTitle
+    :visible.sync="dialogVisible"
+    width="30%"
+  >
+    <el-form ref="form" :model="dialogDetail" label-width="80px">
+      <el-form-item label="文章标题">
+        <el-input v-model="dialogDetail.title" placeholder="请输入文章标题"></el-input>
+      </el-form-item>
+      <el-form-item label="文章内容">
+        <el-input
+          type="textarea"
+          :rows="6"
+          placeholder="请输入文章内容"
+          v-model="dialogDetail.content">
+        </el-input>
+      </el-form-item>
+    </el-form>
 
-      <span slot="footer" class="dialog-footer">
+    <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirm()">确 认</el-button>
       </span>
-    </el-dialog>
+  </el-dialog>
     <el-dialog
       title="删除操作"
       :visible.sync="deleteDialogVisible"

@@ -7,14 +7,14 @@
       <el-collapse v-model="activeNames">
         <el-collapse-item v-for="(item, index) in teamList" :key="index" name="1">
           <template slot="title">
-            <div class="collapse-title">{{item.teamName}}</div>
+            <div class="collapse-title">{{item.departmentName}}</div>
           </template>
           <div>{{item.teamDesc}}</div>
-          <div>组员： <span v-for="(member, memberIndex) in item.teamMember" :key="memberIndex"> {{member.name}}、</span></div>
+          <div>描述： {{item.departmentDesc}}</div>
           <div class="project-item" v-for="(project, projectIndex) in item.projectList" :key="projectIndex">
-            <div class="projectName">项目： {{project.projectName}}</div>
-            <div>描述： {{project.projectDesc}}</div>
-            <el-button type="primary" size="small" @click="goToDetail(project.projectID)">进入项目</el-button>
+            <div class="projectName">项目： {{project.content}}</div>
+            <div>成员： {{project.number}}</div>
+            <el-button type="primary" size="small" @click="goToDetail(project.id)">进入项目</el-button>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -36,72 +36,7 @@
     data(){
       return{
         activeNames: ['1'],
-        teamList:[
-          {
-            teamID: 2,
-            teamName:'初级组',
-            teamDesc:'刚开始学的一些小东西',
-            teamMember:[
-              {
-                id: 11,
-                name:'Amadeus'
-              },
-              {
-                id: 12,
-                name:'莫扎特'
-              },
-              {
-                id: 14,
-                name:'还行的昵称'
-              }
-            ],
-            projectList:[
-              {
-                projectID: 456,
-                projectName:'实验室管理系统',
-                projectDesc:'一个实验室项目',
-              },
-              {
-                projectID: 457,
-                projectName:'爬虫实现',
-                projectDesc:'爬取IP地址',
-              },
-            ],
-
-          },
-          {
-            teamID: 4,
-            teamName:'兴趣组',
-            teamDesc:'找一些感兴趣的东西做',
-            teamMember:[
-              {
-                id: 11,
-                name:'Amadeus'
-              },
-              {
-                id: 12,
-                name:'莫扎特'
-              },
-              {
-                id: 16,
-                name:'Dio'
-              }
-            ],
-            projectList:[
-              {
-                projectID: 458,
-                projectName:'天池幸福感预测',
-                projectDesc:'预测幸福感指数',
-              },
-              {
-                projectID: 459,
-                projectName:'自动化测试',
-                projectDesc:'运用TestNG运行自动化测试脚本',
-              },
-            ],
-
-          },
-        ],
+        teamList:[],
         newestList:[
           {
             id: 7,
@@ -160,26 +95,73 @@
             isPraised: false,
           },
         ],
+        allDepartment:[],
       }
     },
     mounted(){
-      this.getData()
+      this.getAllDepartment()
     },
     methods:{
-      getData(){
-        this.$api.get( '/api/pmark/selectByUsername',
-          {
-            "page": 1,
-            "username": this.$store.state.user.nickName
-          },
+      getAllDepartment(){
+        this.$api.get( '/api/departments',
+          {},
           res => {
             if (res.status >= 200) {
-              this.allMember.push(...res.data.data)
+              this.allDepartment.push(...res.data.data)
+              this.getData()
             } else {
               console.log(res.message);
             }
           }
         )
+      },
+      getData(){
+        this.$api.get( '/api/projects',
+          {
+          },
+          res => {
+            if (res.status >= 200) {
+              let myList = []
+                res.data.data.forEach(item => {
+                if(item.number.indexOf(this.$store.state.userInfo.account+'、') != -1){
+                  myList.push(item)
+                }
+              })
+              this.dataProcess(myList)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      dataProcess(myList){
+        let tempList = []
+        let departmentIdList = []
+        myList.forEach(item => {
+          if(departmentIdList.indexOf(item.departmentId) == -1){
+            departmentIdList.push(item.departmentId)
+            tempList.push({
+              departmentId: item.departmentId,
+              projectList: [item]
+            })
+          }else{
+            tempList.forEach(tempItem => {
+              if(tempItem.departmentId == item.departmentId){
+                tempItem.projectList.push(item)
+              }
+            })
+          }
+        })
+        tempList.map(item => {
+          this.allDepartment.forEach(departmentItem => {
+            if(departmentItem.id == item.departmentId){
+              item.departmentName = departmentItem.name
+              item.departmentDesc = departmentItem.description
+            }
+          })
+        })
+        this.teamList = tempList
+        console.log(this.teamList)
       },
       changePraise(id){
         let hasChanged = false

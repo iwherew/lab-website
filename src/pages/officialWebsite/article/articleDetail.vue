@@ -4,7 +4,7 @@
       <div class="content flex-c">
         <div class="title">{{context.title}}</div>
         <div class="context-info flex">
-          <div class="context-info-item">作者：{{context.upUserNickname}}</div>
+          <div class="context-info-item">作者：{{context.upUserNickname || context.upNickname}}</div>
           <div class="context-info-item">上传时间：{{context.upDate}}</div>
           <div class="context-info-item">点击量：{{context.visitCount}}</div>
 <!--          <div class="context-info-item flex collect"-->

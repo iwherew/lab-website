@@ -39,16 +39,16 @@
       </div>
       <div class="file">
         <el-button type="success">保存文章</el-button>
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :file-list="context.fileList">
-          <el-button type="primary">点击上传文件</el-button>
-        </el-upload>
+<!--        <el-upload-->
+<!--          class="upload-demo"-->
+<!--          action="https://jsonplaceholder.typicode.com/posts/"-->
+<!--          :on-preview="handlePreview"-->
+<!--          :on-remove="handleRemove"-->
+<!--          :before-remove="beforeRemove"-->
+<!--          multiple-->
+<!--          :file-list="context.fileList">-->
+<!--          <el-button type="primary">点击上传文件</el-button>-->
+<!--        </el-upload>-->
       </div>
     </div>
   </div>

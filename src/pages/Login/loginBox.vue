@@ -199,6 +199,19 @@
           }
         )
       },
+      getUserInfo(id){
+        this.$api.get( '/api/userId',
+          {"id" : id},
+          res => {
+            if (res.status >= 200) {
+              this.userInfo = res.data
+              this.$store.dispatch('setUserInfo',res.data)
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       login(){
         this.$api.post('/api/login',
           {
@@ -214,6 +227,7 @@
                 type: 'success'
               });
               this.$store.dispatch('setAccount',res.data)
+              this.getUserInfo(res.data.userId)
               this.$router.back()
             } else {
               this.$notify.error(res.data.message);

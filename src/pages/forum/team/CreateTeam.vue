@@ -16,12 +16,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="团队成员：">
-          <el-select v-model="form.member" multiple placeholder="请选择成员">
+          <el-select v-model="form.member" multiple filterable placeholder="请选择成员">
             <el-option
-              v-for="item in allMember"
+              v-for="item in allMemberCompleted"
               :key="item.id"
-              :label="item.memberName"
-              :value="item.memberName">
+              :label="item.account"
+              :value="item.account">
             </el-option>
           </el-select>
         </el-form-item>
@@ -48,6 +48,7 @@
   import quickAccess from '../Home/quickAccess'
   import tagGroup from '../Home/tagGroup'
   import articleList from '../common/articleList'
+  import {getCurrentDate} from '../../../utils/func'
   export default {
     components:{quickAccess,tagGroup,articleList},
     data(){
@@ -113,14 +114,47 @@
             isPraised: false,
           },
         ],
-
+        getAllDepartmentCompleted:false,
+      }
+    },
+    computed:{
+      allMemberCompleted(){
+        let tempList = []
+        let reg=/^\d{1,}$/
+        let pattern=new RegExp(reg);
+        this.allMember.forEach(item => {
+          if(!pattern.test(item.account) && this.$store.state.userInfo.account != item.account){
+            tempList.push(item)
+          }
+        })
+        console.log(tempList)
+        return tempList
       }
     },
     mounted() {
+      this.getAllMember(1)
       this.getAllDepartment()
-      this.getAllMember()
     },
     methods:{
+      getAllMember(page){
+        this.$api.get( '/api/getuserInfoByPage',
+          {'page':page},
+          res => {
+            if (res.status >= 200) {
+              this.allMember.push(...res.data.data)
+              if(!this.getAllDepartmentCompleted && res.data.totalNum > res.data.pageSize){
+                this.getAllDepartmentCompleted = true
+                let count = res.data.totalNum / res.data.pageSize -1
+                for(let i=0;i<count;i++){
+                  this.getAllMember(i+2)
+                }
+              }
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
       getAllDepartment(){
         this.$api.get( '/api/departments',
           {},
@@ -133,39 +167,29 @@
           }
         )
       },
-      getAllMember(){
-        this.$api.get( '/api/members',
-          {},
-          res => {
-            if (res.status >= 200) {
-              this.allMember.push(...res.data.data)
-            } else {
-              console.log(res.message);
-            }
-          }
-        )
-      },
       check(){
-        if(this.form.departmentId && this.form.member && this.form.projectName){
+        if(this.form.departmentId && this.form.projectName){
           return false
         }else{
           return true
         }
       },
       submit(){
-        let memberString = ''
+        let memberList = this.$store.state.userInfo.account + '、'
         this.form.member.forEach(item => {
-          memberString += item + " "
+          memberList += item + '、'
         })
+        console.log(memberList)
         this.$api.post( '/api/papply',
           {
             "content": this.form.projectName,
             "departmentId": this.form.departmentId,
-            "number": memberString,
+            "number": memberList,
             "userId": this.$store.state.user.userId
           },
           res => {
             if (res.status >= 200) {
+              this.addFirstRecord(this.form.projectName)
               this.$message({
                 message: '创建成功',
                 type: 'success'
@@ -177,6 +201,24 @@
           }
         )
       },
+      addFirstRecord(projectName){
+        this.$api.post( '/api/pmark/add',
+          {
+            "pcontent": "创建项目",
+            "pname": projectName,
+            "update": this.getCurrentDate(),
+            "userid": this.$store.state.user.userId,
+            "username": this.$store.state.userInfo.account
+          },
+          res => {
+            if (res.status >= 200) {
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
+      },
+      getCurrentDate,
       changePraise(id){
         let hasChanged = false
         this.newestList.forEach((item,index) => {

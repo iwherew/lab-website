@@ -64,6 +64,7 @@
     methods: {
       logout(){
         this.$store.dispatch('setAccount',{})
+        this.$store.dispatch('setUserInfo',{})
         this.$router.push('/')
       },
       toLogin() {

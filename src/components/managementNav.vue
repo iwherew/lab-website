@@ -62,6 +62,7 @@
     methods: {
       logout(){
         this.$store.dispatch('setAccount',{})
+        this.$store.dispatch('setUserInfo',{})
         this.$router.push('/')
       },
       toLogin() {
@@ -116,7 +117,6 @@
         font-weight: bold;
       }
     }
-
     .avatar {
       margin: 10px 20px;
       height: 50px;
@@ -126,7 +126,6 @@
       &.no-avatar {
         background-image: url("../images/officialWebsite/home/yonghu.png");
       }
-
       &.user-avatar {
         margin: 5px 20px 0;
         height: 60px;

@@ -15,7 +15,8 @@ const state = {
     // email: 'iwhere_w@126.com',
     // phone: '18767177777',
     // selfIntroduction: '这个人很懒',
-  }
+  },
+  userInfo:{},
 }
 
 export default new Vuex.Store({
