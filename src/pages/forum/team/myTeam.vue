@@ -180,8 +180,7 @@
         })
       },
       goToDetail(id){
-        let routeData = this.$router.resolve({ path: '/forum/project' ,query:{id:id}});
-        window.open(routeData.href, '_blank');
+        this.$router.push({ path: '/forum/project' ,query:{id:id}});
       },
     }
   }

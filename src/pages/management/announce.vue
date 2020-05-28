@@ -1,17 +1,17 @@
 <template>
   <div class="container">
     <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="search">
-        <el-select v-model="selectedDepartment" placeholder="请选择部门" @change="changeSelectedDepartment">
-          <el-option
-            v-for="item in allDepartment"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item prop="search">-->
+<!--        <el-select v-model="selectedDepartment" placeholder="请选择部门" @change="changeSelectedDepartment">-->
+<!--          <el-option-->
+<!--            v-for="item in allDepartment"-->
+<!--            :key="item.id"-->
+<!--            :label="item.name"-->
+<!--            :value="item.id"-->
+<!--          >-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item prop="search">
         <el-input
           v-model="searchForm.name"

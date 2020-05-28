@@ -185,6 +185,11 @@
               res.data.data.forEach(item => {
                 if(item.id == this.$route.query.id){
                   this.state = item
+                  // 对比项目成员名单
+                  if(item.number.indexOf(this.$store.state.userInfo.account+'、') == -1){
+                    this.$message.error('不在项目名单中，禁止访问')
+                    this.$router.push('/forum/myTeam')
+                  }
                 }
               })
               this.getRecord()

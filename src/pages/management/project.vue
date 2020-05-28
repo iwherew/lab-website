@@ -1,15 +1,5 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item>
-        <el-button
-          icon="search"
-          @click="showDialog(true)"
-        >
-          添加
-        </el-button>
-      </el-form-item>
-    </el-form>
     <el-table
       :data="list"
       style="width: 100%"
@@ -73,27 +63,21 @@
       </el-pagination>
     </div>
     <el-dialog
-      :title=this.dialogTitle
+      title="项目纪录"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="50%"
     >
-      <el-form ref="form" :model="departmentDetail" label-width="80px">
-        <el-form-item label="部门名称">
-          <el-input v-model="departmentDetail.name" placeholder="请输入部门名称"></el-input>
-        </el-form-item>
-        <el-form-item label="部门描述">
-          <el-input
-            type="textarea"
-            :rows="3"
-            placeholder="请输入部门描述"
-            v-model="departmentDetail.description">
-          </el-input>
-        </el-form-item>
-      </el-form>
+      <el-timeline>
+        <el-timeline-item :timestamp="item.update" placement="top" v-for="(item, index) in record" :key="index">
+          <el-card>
+            <h4>{{item.pcontent}}</h4>
+            <p>{{item.username}} 提交于 {{item.update}}</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirm()">确 认</el-button>
+        <el-button type="primary" @click="dialogVisible = false">关 闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -115,6 +99,7 @@
         },
         allDepartment:[],
         dialogTitle: null,
+        record: null,
       }
     },
     mounted() {
@@ -217,7 +202,8 @@
           },
           res => {
             if (res.status >= 200) {
-              this.getData(true)
+              this.dialogVisible = true
+              this.record = res.data.data
             } else {
               console.log(res.message);
             }

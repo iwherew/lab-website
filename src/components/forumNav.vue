@@ -30,7 +30,7 @@
       </div>
       <div class="avatar-wrap" v-else>
         <el-dropdown @command="handleCommand">
-          <div class="avatar user-avatar bg"></div>
+          <div class="avatar user-avatar bg" :style="{'backgroundImage':'url('+$store.state.userInfo.profilePicture+')'}"></div>
           <!--          <div class="red-dot">7</div>-->
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="/">门户网站</el-dropdown-item>

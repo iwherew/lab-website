@@ -1,32 +1,32 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="searchForm" style="text-align:right">
-      <el-form-item prop="search">
-        <el-input
-          v-model="searchForm.name"
-          placeholder="请输入成员名称"
-        ></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="search"
-          @click="getData(true)"
-          style="marginLeft:20px"
-        >
-          搜索
-        </el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="success"
-          icon="search"
-          @click="showDialog(true)"
-        >
-          添加
-        </el-button>
-      </el-form-item>
-    </el-form>
+<!--    <el-form :inline="true" :model="searchForm" style="text-align:right">-->
+<!--      <el-form-item prop="search">-->
+<!--        <el-input-->
+<!--          v-model="searchForm.name"-->
+<!--          placeholder="请输入成员名称"-->
+<!--        ></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          icon="search"-->
+<!--          @click="getData(true)"-->
+<!--          style="marginLeft:20px"-->
+<!--        >-->
+<!--          搜索-->
+<!--        </el-button>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="search"-->
+<!--          @click="showDialog(true)"-->
+<!--        >-->
+<!--          添加-->
+<!--        </el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
     <el-table
       :data="list"
       style="width: 100%"

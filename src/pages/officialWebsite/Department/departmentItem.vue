@@ -100,12 +100,11 @@
       width: 550px;
       height: 400px;
       border-radius: 20px;
-      transition: width 0.6s, height 0.6s, transform 0.6s;
+      transition: width 0.6s, height 0.6s;
       &.active{
         width: 600px;
         height: 436px;
-        transition: width 0.3s, height 0.3s, transform 0.3s;
-
+        transition: width 0.3s, height 0.3s;
       }
     }
     .content{

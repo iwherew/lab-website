@@ -1,6 +1,6 @@
 <template>
   <div class="profile flex-c">
-    <div class="avatar bg"></div>
+    <div class="avatar bg" :style="{'backgroundImage':'url('+userInfo.profilePicture+')'}"></div>
     <div class="authorization">管理员</div>
     <div class="info">
       <div class="title gray flex">
@@ -31,6 +31,10 @@
         </el-form-item>
         <el-form-item label="个人介绍">
           <el-input v-model="userInfoTemp.introduction" placeholder="请输入个人介绍"></el-input>
+        </el-form-item>
+        <el-form-item label="头像">
+          <input @change="uploadPhoto($event)" type="file">
+          <img :src="userInfoTemp.profilePicture" alt="" height="200" width="200">
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -73,7 +77,7 @@
           "phone": null,
           "profilePicture": null,
           "registerTime": null
-        }
+        },
       }
     },
     mounted(){
@@ -121,6 +125,7 @@
             "email": this.userInfoTemp.email,
             "name": this.userInfoTemp.nickname,
             "phone": this.userInfoTemp.phone,
+            "picture": this.userInfoTemp.profilePicture,
           },
           res => {
             if (res.status >= 200) {
@@ -131,6 +136,26 @@
             }
           }
         )
+      },
+      uploadPhoto (e) {
+        // 利用fileReader对象获取file
+        let file = e.target.files[0];
+        let filesize = file.size;
+        let filename = file.name;
+        // 2,621,440   2M
+        if (filesize > 2101440) {
+          // 图片大于2MB
+
+        }
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+
+          // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
+          let imgcode = e.target.result;
+          this.userInfoTemp.profilePicture=imgcode
+          console.log(this.userInfoTemp.profilePicture);
+        }
       }
     }
   }

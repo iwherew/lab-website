@@ -13,10 +13,10 @@
             <i class="el-icon-user-solid"></i>
             <span slot="title">原始帐号</span>
           </el-menu-item>
-          <el-menu-item index="/management/apply">
-            <i class="el-icon-s-order"></i>
-            <span slot="title">入部申请</span>
-          </el-menu-item>
+<!--          <el-menu-item index="/management/apply">-->
+<!--            <i class="el-icon-s-order"></i>-->
+<!--            <span slot="title">入部申请</span>-->
+<!--          </el-menu-item>-->
           <el-menu-item index="/management/job">
             <i class="el-icon-reading"></i>
             <span slot="title">招聘信息</span>

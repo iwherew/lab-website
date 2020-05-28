@@ -1,6 +1,7 @@
 // 引入axios
-import axios from 'axios'
 import store from "../vuex/state";
+
+import axios from 'axios'
 
 let http = axios.create({
   baseURL: '/api',
@@ -8,15 +9,6 @@ let http = axios.create({
   headers: {
     'Content-Type': 'application/json;charset=utf-8'
   },
-  // transformRequest: [function (data) {
-  //   let newData = '';
-  //   for (let k in data) {
-  //     if (data.hasOwnProperty(k) === true) {
-  //       newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-  //     }
-  //   }
-  //   return newData;
-  // }]
   transformRequest: function (data) {
     // 对 data 进行任意转换处理
     return JSON.stringify(data);;
@@ -37,7 +29,7 @@ function apiAxios(method, url, params, response) {
 }
 
 http.interceptors.request.use(config => {
-  if (store.state.user.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+  if (store.state.user.token) {
     config.headers.common['Token']=store.state.user.token
   }
   return config;
