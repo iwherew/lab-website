@@ -4,41 +4,41 @@
       <div class="content">
         <el-form ref="form" label-width="100px">
           <el-form-item label="分区：">
-            <el-radio v-for="(item,index) in allDepartment" v-model="context.checkedDepartment" :label="item" :key="index">{{item}}</el-radio>
+            <el-radio v-for="(item,index) in allDepartment" v-model="checkedDepartment" :label="item" :key="index">{{item}}</el-radio>
           </el-form-item>
           <el-form-item label="标题：">
-            <el-input v-model="context.title" placeholder="请输入文章标题"></el-input>
+            <el-input v-model="title" placeholder="请输入文章标题"></el-input>
           </el-form-item>
-          <el-form-item label="标签：">
-            <el-tag
-              :key="tag"
-              v-for="tag in context.dynamicTags"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputVisible"
-              v-model="inputValue"
-              ref="saveTagInput"
-              size="small"
-              @keyup.enter.native="handleInputConfirm"
-              @blur="handleInputConfirm"
-            >
-            </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
-          </el-form-item>
+<!--          <el-form-item label="标签：">-->
+<!--            <el-tag-->
+<!--              :key="tag"-->
+<!--              v-for="tag in context.dynamicTags"-->
+<!--              closable-->
+<!--              :disable-transitions="false"-->
+<!--              @close="handleClose(tag)">-->
+<!--              {{tag}}-->
+<!--            </el-tag>-->
+<!--            <el-input-->
+<!--              class="input-new-tag"-->
+<!--              v-if="inputVisible"-->
+<!--              v-model="inputValue"-->
+<!--              ref="saveTagInput"-->
+<!--              size="small"-->
+<!--              @keyup.enter.native="handleInputConfirm"-->
+<!--              @blur="handleInputConfirm"-->
+<!--            >-->
+<!--            </el-input>-->
+<!--            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>-->
+<!--          </el-form-item>-->
           <el-form-item label="内容：">
             <div class="white">
-              <editor v-model="context.detail" :isClear="isClear" @change="change"></editor>
+              <editor v-model="context" :isClear="isClear" @change="change"></editor>
             </div>
           </el-form-item>
         </el-form>
       </div>
       <div class="file">
-        <el-button type="success">保存文章</el-button>
+        <el-button type="success" @click="save">保存文章</el-button>
 <!--        <el-upload-->
 <!--          class="upload-demo"-->
 <!--          action="https://jsonplaceholder.typicode.com/posts/"-->
@@ -64,61 +64,31 @@
         inputVisible: false,
         inputValue: '',
         isClear: false,
+        title: null,
+        context: null,
         allDepartment: [
           '提问区',
           '分享区',
           '闲聊区',
         ],
-        context: {
-          id: null,
-          title: null,
-          author: null,
-          createTime: null,
-          visitorVolume: null,
-          detail: ``,
-          dynamicTags: ['标签一', '标签二', '标签三'],
-          fileList: [{
-            name: `关于公布学校管理服务部门职责的通知 杭电人【2019】 85号.pdf`,
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }, {
-            name: `网络开学工作.pdf`,
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }],
-          checkedDepartment: '提问区',
-        },
+        checkedDepartment: '提问区',
       }
     },
     methods: {
-      handleClose(tag) {
-        this.context.dynamicTags.splice(this.context.dynamicTags.indexOf(tag), 1);
-      },
-
-      showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
-
-      handleInputConfirm() {
-        let inputValue = this.inputValue;
-        if (inputValue) {
-          this.context.dynamicTags.push(inputValue);
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
-      },
-      change(val){
-        console.log(val)
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+      save(){
+        this.$api.post('/api/insertAward',
+          {
+            "title": "【内部论坛："+ this.checkedDepartment +"】" +this.title,
+            "content": this.context
+          },
+          res => {
+            if (res.status >= 200) {
+              this.$router.back()
+            } else {
+              console.log(res.message);
+            }
+          }
+        )
       }
     },
   }

@@ -4,7 +4,7 @@
     <div class="sub-title">可以在论坛里分享思路、获取资料、畅所欲言</div>
     <div class="search-bar flex">
       <input class="search-input" v-model="searchText" placeholder="想要搜索什么？">
-      <div class="search-btn">搜索</div>
+      <div class="search-btn" @click="search">搜索</div>
     </div>
   </div>
 </template>
@@ -13,6 +13,15 @@
     data() {
       return {
         searchText: ''
+      }
+    },
+    methods:{
+      search(){
+        if(this.searchText){
+          this.$router.push({ path: '/forum/mixed' ,query:{keywords: this.searchText}})
+        }else{
+          this.$router.push('/forum/mixed')
+        }
       }
     }
   }

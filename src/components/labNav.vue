@@ -33,7 +33,7 @@
 <!--          <div class="red-dot">7</div>-->
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="/forum">内部论坛</el-dropdown-item>
-            <el-dropdown-item command="/management">后台管理</el-dropdown-item>
+            <el-dropdown-item command="/management" v-if="$store.state.user.role[0] != 'student'">后台管理</el-dropdown-item>
             <el-dropdown-item command="/forum/myTeam">我的团队</el-dropdown-item>
             <el-dropdown-item command="/personalPage/0">通知公告</el-dropdown-item>
             <el-dropdown-item command="/personalPage/1">招生信息</el-dropdown-item>

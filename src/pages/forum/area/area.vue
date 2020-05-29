@@ -6,17 +6,12 @@
         v-for="(item, index) in articleList"
         :key="index"
         :articleItem="item"
-        @changePraise="changePraise"
       />
-      <el-pagination
-        layout="prev, pager, next, jumper"
-        :total="500">
-      </el-pagination>
     </div>
     <div class="right">
       <quick-access/>
       <tag-group/>
-      <article-list title="最新内容" :list="newestList" @changePraise="changePraise"/>
+      <article-list title="最新内容" :list="newestList"/>
     </div>
     <div></div>
   </div>
@@ -26,18 +21,16 @@
   import quickAccess from '../Home/quickAccess'
   import tagGroup from '../Home/tagGroup'
   import articleList from '../common/articleList'
+
   export default {
-    components:{articleBrief,quickAccess,tagGroup,articleList},
-    props:['articleList','newestList'],
-    methods:{
-      changePraise(id){
-        this.$emit('changePraise',id)
-      },
+    components: {articleBrief, quickAccess, tagGroup, articleList},
+    props: ['articleList', 'newestList'],
+    methods: {
     }
   }
 </script>
 <style scoped lang="less">
-  .area{
+  .area {
     width: 100%;
     letter-spacing: 0;
     justify-content: space-between;

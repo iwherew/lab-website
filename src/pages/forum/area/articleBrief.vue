@@ -1,25 +1,24 @@
 <template>
   <div class="article-brief">
     <div class="header flex cp">
-      <div :class="iconClass(articleItem.subarea)"></div>
-      <div class="title one-line" @click="goToDetail(articleItem.id)">{{articleItem.title}}</div>
+      <div :class="iconClass(articleItem.title)"></div>
+      <div class="title one-line" @click="goToDetail(articleItem.id)">{{articleItem.title.slice(10)}}</div>
     </div>
     <div class="info flex">
       <div class="info-left flex">
         <div class="info-icon bg calendar"></div>
-        <div class="time text">{{articleItem.time}}</div>
+        <div class="time text">{{articleItem.datetime}}</div>
         <div class="info-icon bg tag"></div>
-        <div class="text">{{articleItem.tag}}</div>
+        <div class="text">{{articleItem.nickname}}</div>
         <div class="info-icon bg comment"></div>
-        <div class="text">{{articleItem.commentNum}}条评论</div>
+        <div class="text">{{articleItem.visitCount}}次查看</div>
       </div>
-      <div :class="['info-right','flex','praise',articleItem.isPraised?'is-praised':'']" @click="changePraise(articleItem.id)">
-        <div class="praise-icon bg"></div>
-        <div class="praise-num">{{articleItem.praisePoints}}</div>
-      </div>
+<!--      <div :class="['info-right','flex','praise',articleItem.isPraised?'is-praised':'']" @click="changePraise(articleItem.id)">-->
+<!--        <div class="praise-icon bg"></div>-->
+<!--        <div class="praise-num">{{articleItem.praisePoints}}</div>-->
+<!--      </div>-->
     </div>
-    <div class="brief cp three-lines" @click="goToDetail(articleItem.id)">
-      {{articleItem.brief}}
+    <div class="brief cp" @click="goToDetail(articleItem.id)" v-html="articleItem.content">
     </div>
   </div>
 </template>
@@ -27,11 +26,16 @@
   export default {
     props:['articleItem'],
     methods: {
-      iconClass(subarea) {
+      iconClass(title) {
+        let subarea
+        if(title.indexOf('【内部论坛：提问区】') != -1){
+          subarea = 'ask'
+        }else if(title.indexOf('【内部论坛：分享区】') != -1){
+          subarea = 'share'
+        }else{
+          subarea = 'chat'
+        }
         return `content-icon bg ` + subarea
-      },
-      changePraise(id){
-        this.$emit('changePraise',id)
       },
       goToDetail(id){
         let routeData = this.$router.resolve({ path: '/forum/articleDetail' ,query:{id:id}});
@@ -132,6 +136,7 @@
     }
     .brief{
       width: 810px;
+      max-height: 90px;
       color: #6F7579;
       font-size: 14px;
       line-height: 25px;

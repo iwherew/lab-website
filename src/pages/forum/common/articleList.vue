@@ -5,18 +5,18 @@
          v-for="(item, index) in list"
          :key="index"
     >
-      <div :class="iconClass(item)"></div>
+      <div :class="iconClass(item.title)"></div>
       <div class="brief flex-c">
         <div class="title one-line cp"
-             @click="goToDetail(item.id)">{{item.title}}</div>
+             @click="goToDetail(item.id)">{{item.title.slice(10)}}</div>
         <div class="subtitle flex">
-          <div class="time">{{item.time}}</div>
-          <div class="subarea" v-text="subareaTransform(item.subarea)"></div>
+          <div class="time">{{item.datetime.split(" ")[0]}}</div>
+          <div class="subarea">{{item.title.slice(6,9)}}</div>
         </div>
       </div>
-      <div :class="['praise',item.isPraised?'is-praised':'']" @click="changePraise(item.id)">
+      <div class="praise">
         <div class="praise-icon bg"></div>
-        <div class="praise-num">{{item.praisePoints}}</div>
+        <div class="praise-num">{{item.visitCount}}</div>
       </div>
     </div>
   </div>
@@ -25,8 +25,16 @@
   export default {
     props:['title','list'],
     methods:{
-      iconClass(item){
-        return `content-icon bg `+ item.subarea
+      iconClass(title) {
+        let subarea
+        if(title.indexOf('【内部论坛：提问区】') != -1){
+          subarea = 'ask'
+        }else if(title.indexOf('【内部论坛：分享区】') != -1){
+          subarea = 'share'
+        }else{
+          subarea = 'chat'
+        }
+        return `content-icon bg ` + subarea
       },
       subareaTransform(subarea){
         switch (subarea) {
@@ -37,9 +45,6 @@
           case 'chat':
             return '闲聊区'
         }
-      },
-      changePraise(id){
-        this.$emit('changePraise',id)
       },
       goToDetail(id){
         let routeData = this.$router.resolve({ path: '/forum/articleDetail' ,query:{id:id}});
@@ -83,7 +88,6 @@
       }
     }
     .praise{
-      cursor: pointer;
       position: absolute;
       right: 0;
       bottom: 0;
@@ -98,7 +102,8 @@
         margin-right: 8px;
         width: 15px;
         height: 15px;
-        background-image: url("../../../images/forum/pariseIcon.png");
+        background-image: url("../../../images/forum/comment.png");
+        background-size: cover;
       }
       .praise-num{
         color: #6F7579;
@@ -112,11 +117,11 @@
           background-image: url("../../../images/forum/pariseIconActive.png");
         }
       }
-      &:hover{
-        .praise-icon{
-          background-image: url("../../../images/forum/pariseIconActive.png");
-        }
-      }
+      /*&:hover{*/
+      /*  .praise-icon{*/
+      /*    background-image: url("../../../images/forum/pariseIconActive.png");*/
+      /*  }*/
+      /*}*/
     }
   }
   .content-icon{

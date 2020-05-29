@@ -32,7 +32,7 @@
     <div class="right-part">
       <quick-access/>
       <tag-group/>
-      <article-list title="最新内容" :list="newestList" @changePraise="changePraise"/>
+      <article-list title="最新内容" :list="newestList"/>
     </div>
     <div></div>
     <el-dialog
@@ -213,22 +213,6 @@
             }
           }
         )
-      },
-      changePraise(id){
-        let hasChanged = false
-        this.newestList.forEach((item,index) => {
-          if(item.id == id){
-            if(!hasChanged){
-              hasChanged = true
-              if(item.isPraised){
-                this.newestList[index].praisePoints--
-              }else{
-                this.newestList[index].praisePoints++
-              }
-            }
-            this.newestList[index].isPraised = !item.isPraised
-          }
-        })
       },
       showDialog(){
         this.update = null

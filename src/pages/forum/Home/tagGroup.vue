@@ -5,6 +5,7 @@
       <div class="tag"
            v-for="(item, index) in tagsList"
            :key="index"
+           @click="search(item)"
       >{{item}}</div>
     </div>
   </div>
@@ -16,6 +17,11 @@
         tagsList:[
           '机器学习','可视化','Apache','无标注数据','框架','非结构化','云恓大会','微服务','分布式','OceanBase','性能开销'
         ]
+      }
+    },
+    methods:{
+      search(searchText){
+        this.$router.push({ path: '/forum/mixed' ,query:{keywords: searchText}})
       }
     }
   }

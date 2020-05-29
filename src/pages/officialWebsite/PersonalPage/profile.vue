@@ -154,7 +154,6 @@
           // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
           let imgcode = e.target.result;
           this.userInfoTemp.profilePicture=imgcode
-          console.log(this.userInfoTemp.profilePicture);
         }
       }
     }

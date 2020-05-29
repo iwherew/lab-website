@@ -39,7 +39,7 @@
     <div class="right-part">
       <quick-access/>
       <tag-group/>
-      <article-list title="最新内容" :list="newestList" @changePraise="changePraise"/>
+      <article-list title="最新内容" :list="newestList"/>
     </div>
     <div></div>
   </div>
@@ -135,18 +135,18 @@
       this.getAllMember(1)
       this.getAllDepartment()
     },
-    methods:{
-      getAllMember(page){
-        this.$api.get( '/api/getuserInfoByPage',
-          {'page':page},
+    methods: {
+      getAllMember(page) {
+        this.$api.get('/api/getuserInfoByPage',
+          {'page': page},
           res => {
             if (res.status >= 200) {
               this.allMember.push(...res.data.data)
-              if(!this.getAllDepartmentCompleted && res.data.totalNum > res.data.pageSize){
+              if (!this.getAllDepartmentCompleted && res.data.totalNum > res.data.pageSize) {
                 this.getAllDepartmentCompleted = true
-                let count = res.data.totalNum / res.data.pageSize -1
-                for(let i=0;i<count;i++){
-                  this.getAllMember(i+2)
+                let count = res.data.totalNum / res.data.pageSize - 1
+                for (let i = 0; i < count; i++) {
+                  this.getAllMember(i + 2)
                 }
               }
             } else {
@@ -155,8 +155,8 @@
           }
         )
       },
-      getAllDepartment(){
-        this.$api.get( '/api/departments',
+      getAllDepartment() {
+        this.$api.get('/api/departments',
           {},
           res => {
             if (res.status >= 200) {
@@ -167,20 +167,20 @@
           }
         )
       },
-      check(){
-        if(this.form.departmentId && this.form.projectName){
+      check() {
+        if (this.form.departmentId && this.form.projectName) {
           return false
-        }else{
+        } else {
           return true
         }
       },
-      submit(){
+      submit() {
         let memberList = this.$store.state.userInfo.account + '、'
         this.form.member.forEach(item => {
           memberList += item + '、'
         })
         console.log(memberList)
-        this.$api.post( '/api/papply',
+        this.$api.post('/api/papply',
           {
             "content": this.form.projectName,
             "departmentId": this.form.departmentId,
@@ -201,8 +201,8 @@
           }
         )
       },
-      addFirstRecord(projectName){
-        this.$api.post( '/api/pmark/add',
+      addFirstRecord(projectName) {
+        this.$api.post('/api/pmark/add',
           {
             "pcontent": "创建项目",
             "pname": projectName,
@@ -219,22 +219,6 @@
         )
       },
       getCurrentDate,
-      changePraise(id){
-        let hasChanged = false
-        this.newestList.forEach((item,index) => {
-          if(item.id == id){
-            if(!hasChanged){
-              hasChanged = true
-              if(item.isPraised){
-                this.newestList[index].praisePoints--
-              }else{
-                this.newestList[index].praisePoints++
-              }
-            }
-            this.newestList[index].isPraised = !item.isPraised
-          }
-        })
-      },
     }
   }
 </script>

@@ -7,11 +7,12 @@
       <div class="content-right flex-c">
         <div class="btn-group flex">
           <div class="black"></div>
-          <div class="circle-group flex">
+          <div class="circle-group flex" >
             <div class="circle"
                  @mouseenter="changeActive($event)"
                  @mouseleave="removeActive($event)"
                  @click="goToNoticeEdit"
+                 v-if="$store.state.user && $store.state.user.role[0] != 'student'"
             >
               <div class="icon bg add"></div>
             </div>
@@ -177,7 +178,13 @@
           { 'page': this.pageNum},
           res => {
             if (res.status >= 200) {
-              this.articleList = res.data.data
+              let articleList = []
+              res.data.data.forEach(item => {
+                if(item.title.indexOf('【内部论坛') == -1){
+                  articleList.push(item)
+                }
+              })
+              this.articleList = articleList
               this.pageNum = res.data.pageNum,
                 this.pageSize = res.data.pageSize,
                 this.totalNum = res.data.totalNum
